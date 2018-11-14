@@ -4,9 +4,14 @@ import Slideout from "slideout";
 import NoteEditor from "./NoteEditor";
 import NoteManager from "./NoteManager";
 
-const File = (noteName, clickHandler) => {
+const File = (noteName, isActive, clickHandler) => {
   return (
-    <li className="menu-file-list" key={noteName} onClick={clickHandler}>
+    <li
+      className="menu-note-list-item"
+      id={isActive ? "active" : "inactive"}
+      key={noteName}
+      onClick={clickHandler}
+    >
       {noteName}
     </li>
   );
@@ -66,17 +71,18 @@ class App extends Component {
   }
 
   render() {
-    const files = this.noteManager.notes.map(note =>
-      File(note.name, this.fileClicked)
-    );
+    const files = this.noteManager.notes.map(note => {
+      const isActive = this.state.currentNote.name === note.name;
+      return File(note.name, isActive, this.fileClicked);
+    });
 
     return (
       <div>
         <nav id="menu">
           <header>
-            <div className="menu-header">Files</div>
+            <div className="menu-header">Your notes</div>
           </header>
-          <ul>{files}</ul>
+          <ul className="menu-note-list">{files}</ul>
           <button onClick={this.addNewNote}>add</button>
         </nav>
 

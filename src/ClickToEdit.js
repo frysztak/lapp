@@ -40,7 +40,8 @@ class ClickToEdit extends React.Component {
         {this.state.showEditor ? (
           <textarea
             ref="editor"
-            rows="4"
+            className={this.props.className}
+            rows={this.props.rows}
             cols="50"
             autoFocus={true}
             onBlur={this.onEditorLostFocus}
@@ -48,7 +49,11 @@ class ClickToEdit extends React.Component {
             value={this.state.value}
           />
         ) : (
-          <p ref="regular" onClick={this.onRegularTextClicked}>
+          <p
+            ref="regular"
+            className={this.props.className}
+            onClick={this.onRegularTextClicked}
+          >
             {this.state.value}
           </p>
         )}

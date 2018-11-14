@@ -1,19 +1,48 @@
-body {
-  --light-background-color: #fffaf0;
-  --light-text-color: #25283d;
+@import url("https://fonts.googleapis.com/css?family=Lato");
 
-  margin: 0;
-  padding: 0;
+body {
+  --light-background-color: #f2f2f2;
+  --light-text-color: #25283d;
+  --lighter-text-color: #888995;
+  font-family: "Lato", sans-serif;
+
   background-color: var(--light-background-color);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  color: var(--light-text-color);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 .menu-header {
+  font-size: 2em;
+}
+
+.menu-note-list {
+  font-size: 1.5em;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menu-note-list-item {
+  font-size: 1em;
+  margin: 1em;
+  padding: 0;
+}
+
+#active.menu-note-list-item {
   color: var(--light-text-color);
+}
+
+#inactive.menu-note-list-item {
+  color: var(--lighter-text-color);
+}
+
+.note-name {
+  font-size: 2em;
+}
+
+.note-text {
+  font-size: 1em;
 }
 
 .slideout-menu {

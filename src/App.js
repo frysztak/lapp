@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import "./App.css";
 import Slideout from "slideout";
-import Editor from "./Editor";
+import NoteEditor from "./NoteEditor";
+import NoteManager from './NoteManager'
 
-const File = (name, clickHandler) => {
+const File = (noteName, clickHandler) => {
   return (
-    <li className="menu-file-list" key={name} onClick={clickHandler}>
-      {name}
+    <li className="menu-file-list" key={noteName} onClick={clickHandler}>
+      {noteName}
     </li>
   );
 };
@@ -15,18 +16,18 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      availableFiles: [],
-      currentFile: ""
-    };
-
     this.fileClicked = this.fileClicked.bind(this);
     this.handleNoteTextChange = this.handleNoteTextChange.bind(this);
+    this.handleNoteNameChange = this.handleNoteNameChange.bind(this);
+
+    this.noteManager = new NoteManager()
+
+    this.state = {
+      currentNote: this.noteManager.getNewestNote()
+    };
   }
 
   componentDidMount() {
-    this.loadAvailableFiles();
-
     this.slideout = new Slideout({
       panel: document.getElementById("panel"),
       menu: document.getElementById("menu"),
@@ -36,43 +37,24 @@ class App extends Component {
     this.slideout.open();
   }
 
-  loadAvailableFiles() {
-    if (localStorage.length === 0) {
-      localStorage.setItem(
-        "new note",
-        JSON.stringify({
-          content: ""
-        })
-      );
-    }
-    let files = Object.keys(localStorage);
-    this.setState({ availableFiles: files });
-    this.updateCurrentFile(files[0]);
-  }
-
-  updateCurrentFile(filename) {
-    let file = JSON.parse(localStorage.getItem(filename));
-    this.setState({
-      currentFile: {
-        name: filename,
-        content: file.content
-      }
-    });
-  }
-
   fileClicked(e) {
-    const filename = e.target.innerHTML
-    this.updateCurrentFile(filename)
+    const filename = e.target.innerHTML;
+    this.updateCurrentFile(filename);
   }
 
   handleNoteTextChange(text) {
-    let newItem = JSON.stringify({content: text})
-    localStorage.setItem(this.state.currentFile.name, newItem)
+    const note = this.noteManager.updateNoteText(this.state.currentNote.name, text)
+    this.setState({currentNote: note})
+  }
+
+  handleNoteNameChange(name) {
+    const note = this.noteManager.updateNoteName(this.state.currentNote.name, name)
+    this.setState({currentNote: note})
   }
 
   render() {
-    const files = this.state.availableFiles.map(file =>
-      File(file, this.fileClicked)
+    const files = this.noteManager.notes.map(note =>
+      File(note.name, this.fileClicked)
     );
 
     return (
@@ -86,10 +68,10 @@ class App extends Component {
 
         <main id="panel">
           <div>
-            <p>{this.state.currentFile.name}</p>
-            <Editor
-              onTextChange={this.handleNoteTextChange}
-              currentFile={this.state.currentFile}
+            <NoteEditor
+              currentNote={this.state.currentNote}
+              onNoteNameChanged={this.handleNoteNameChange}
+              onNoteTextChanged={this.handleNoteTextChange}
             />
           </div>
         </main>

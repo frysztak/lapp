@@ -7,11 +7,17 @@ class NoteEditor extends React.Component {
 
     this.handleTextChange = this.handleTextChange.bind(this);
     this.onNoteNameChanged = this.onNoteNameChanged.bind(this);
-    this.onNoteTextChanged = this.onNoteTextChanged.bind(this)
+    this.onNoteTextChanged = this.onNoteTextChanged.bind(this);
 
     this.state = {
       currentNote: this.props.currentNote
     };
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (this.props.currentNote !== prevProps.currentNote) {
+      this.setState({ currentNote: this.props.currentNote });
+    }
   }
 
   handleTextChange(e) {

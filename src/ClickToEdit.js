@@ -1,11 +1,12 @@
 import React from "react";
+import ReactMarkdown from "react-markdown";
 
 class ClickToEdit extends React.Component {
   constructor(props) {
     super(props);
 
     this.handleTextChange = this.handleTextChange.bind(this);
-    this.onRegularTextClicked = this.onRegularTextClicked.bind(this);
+    this.onClicked = this.onClicked.bind(this);
     this.onEditorLostFocus = this.onEditorLostFocus.bind(this);
 
     this.state = {
@@ -20,12 +21,12 @@ class ClickToEdit extends React.Component {
     this.setState({ value: text });
   }
 
-  onRegularTextClicked() {
-    this.setState({ showEditor: true });
-  }
-
   onEditorLostFocus() {
     this.setState({ showEditor: false });
+  }
+
+  onClicked() {
+    this.setState({ showEditor: true });
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -36,7 +37,7 @@ class ClickToEdit extends React.Component {
 
   render() {
     return (
-      <div>
+      <div onClick={this.onClicked}>
         {this.state.showEditor ? (
           <textarea
             ref="editor"
@@ -49,13 +50,7 @@ class ClickToEdit extends React.Component {
             value={this.state.value}
           />
         ) : (
-          <pre
-            ref="regular"
-            className={this.props.className}
-            onClick={this.onRegularTextClicked}
-          >
-            {this.state.value}
-          </pre>
+          <ReactMarkdown source={this.state.value} />
         )}
       </div>
     );

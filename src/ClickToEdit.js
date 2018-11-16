@@ -49,13 +49,13 @@ class ClickToEdit extends React.Component {
             value={this.state.value}
           />
         ) : (
-          <p
+          <pre
             ref="regular"
             className={this.props.className}
             onClick={this.onRegularTextClicked}
           >
             {this.state.value}
-          </p>
+          </pre>
         )}
       </div>
     );

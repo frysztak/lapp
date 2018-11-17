@@ -59,12 +59,17 @@ class ClickToEdit extends React.Component {
   }
 
   tickCheckbox(sourcepos) {
-    const beginning = sourcepos.split("-")[0];
-    let line = beginning.split(":")[0];
-    line -= 1; // sourcepos indexing starts with 1
+    let splits = sourcepos.split("-");
+    if (splits.length < 1) return;
+    const beginning = splits[0];
+
+    splits = beginning.split(":");
+    if (splits.length < 1) return;
+    const lineIdx = splits[0] - 1; // indexing starts with 1
 
     let lines = this.state.value.split("\n");
-    lines[line] = lines[line].replace("[ ]", "[x]");
+    if (lines.length <= lineIdx) return;
+    lines[lineIdx] = lines[lineIdx].replace("[ ]", "[x]");
     this.handleTextChange(lines.join("\n"));
   }
 

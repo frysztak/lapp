@@ -8,6 +8,7 @@ class ClickToEdit extends React.Component {
     this.handleTextChange = this.handleTextChange.bind(this);
     this.onClicked = this.onClicked.bind(this);
     this.onEditorLostFocus = this.onEditorLostFocus.bind(this);
+    this.onEditorKeyDown = this.onEditorKeyDown.bind(this);
     this.onCheckboxClicked = this.onCheckboxClicked.bind(this);
 
     this.state = {
@@ -46,6 +47,13 @@ class ClickToEdit extends React.Component {
 
   onEditorLostFocus() {
     this.setState({ showEditor: false });
+  }
+
+  onEditorKeyDown(e) {
+    // detect escape key
+    if (e.keyCode === 27) {
+      this.onEditorLostFocus();
+    }
   }
 
   onClicked() {
@@ -90,6 +98,7 @@ class ClickToEdit extends React.Component {
             cols="50"
             autoFocus={true}
             onBlur={this.onEditorLostFocus}
+            onKeyDown={this.onEditorKeyDown}
             onChange={e => this.handleTextChange(e.target.value)}
             value={this.state.value}
           />

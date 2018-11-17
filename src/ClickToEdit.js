@@ -30,7 +30,7 @@ class ClickToEdit extends React.Component {
 
     return (
       <li
-        onClick={this.onCheckboxClicked}
+        onClick={checkbox ? this.onCheckboxClicked : () => {}}
         data-sourcepos={props["data-sourcepos"]}
       >
         {checkbox}

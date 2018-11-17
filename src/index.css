@@ -1,8 +1,10 @@
-@import url("https://fonts.googleapis.com/css?family=Lato");
+@import url("https://fonts.googleapis.com/css?family=Lato:300");
 
 body {
-  --light-background-color: #f2f2f2;
-  --light-text-color: #25283d;
+  --light-background-color: #fcfafc;
+  --light-background-secondary-color: #333333;
+  --light-text-color: #333333;
+  --light-text-secondary-color: #e0e0e0;
   --lighter-text-color: #888995;
   font-family: "Lato", sans-serif;
 
@@ -14,6 +16,7 @@ body {
 
 .menu-header {
   font-size: 2em;
+  text-align: center;
 }
 
 .menu-note-list {
@@ -25,12 +28,8 @@ body {
 
 .menu-note-list-item {
   font-size: 1em;
-  margin: 1em;
+  margin: 1em 0 1em 0.25em;
   padding: 0;
-}
-
-#active.menu-note-list-item {
-  color: var(--light-text-color);
 }
 
 #inactive.menu-note-list-item {
@@ -59,10 +58,12 @@ body {
   bottom: 0;
   width: 256px;
   min-height: 100vh;
-  overflow-y: scroll;
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   z-index: 0;
   display: none;
+  background-color: var(--light-background-secondary-color);
+  color: var(--light-text-secondary-color);
 }
 
 .slideout-menu-left {

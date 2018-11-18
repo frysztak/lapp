@@ -154,3 +154,25 @@ body {
 .checkbox input[type="checkbox"]:focus + label::before {
   outline: rgb(59, 153, 252) auto 5px;
 }
+
+/* remove ugly dots on Firefox */
+button::-moz-focus-inner {
+  border: 0;
+}
+
+.button-container {
+}
+
+.round-button {
+  height: 48px;
+  width: 48px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  background-color: transparent;
+  color: white;
+  text-align: center;
+  font-size: 2em;
+  border: 2px solid white;
+  outline: none;
+  display: inline-block;
+}

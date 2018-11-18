@@ -83,7 +83,11 @@ class App extends Component {
             <div className="menu-header">Your notes</div>
           </header>
           <ul className="menu-note-list">{files}</ul>
-          <button onClick={this.addNewNote}>add</button>
+          <div className="button-container">
+            <button className="round-button" onClick={this.addNewNote}>
+              +
+            </button>
+          </div>
         </nav>
 
         <main id="panel">

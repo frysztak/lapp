@@ -40,12 +40,13 @@ class NoteEditor extends React.Component {
           text={this.state.currentNote.name}
           rows={1}
           className="note-name"
+          markdown={false}
           onTextChange={this.onNoteNameChanged}
         />
         <ClickToEdit
           text={this.state.currentNote.text}
-          rows={4}
-          className="note-text"
+          rows={6}
+          className="note-body"
           onTextChange={this.onNoteTextChanged}
         />
       </div>

@@ -7,6 +7,7 @@ body {
   --light-text-secondary-color: #e0e0e0;
   --lighter-text-color: #888995;
   font-family: "Lato", sans-serif;
+  margin: 0;
 
   background-color: var(--light-background-color);
   color: var(--light-text-color);
@@ -38,18 +39,15 @@ body {
 
 .note-name {
   font-size: 2em;
-  font-family: "Lato", sans-serif;
+  font-weight: bold;
+  margin: 0.6em 0.3em;
+  font-family: "Lato", sans-serif; /* needs to be set explicitly, in order to override textarea default value */
 }
 
-.note-editor {
-  font-family: "Lato", sans-serif;
-}
-
-.note-text {
-  font-family: "Lato", sans-serif;
-  margin: 0;
-  padding: 0;
-  font-size: 1em;
+.note-body {
+  margin: 0.6em 0.3em;
+  font-size: 1.5em;
+  font-family: "Lato", sans-serif; /* needs to be set explicitly, in order to override textarea default value */
 }
 
 .slideout-menu {

@@ -88,6 +88,17 @@ class ClickToEdit extends React.Component {
   }
 
   render() {
+    const regularView = this.props.markdown ? (
+      <ReactMarkdown
+        className={this.props.className}
+        source={this.state.value}
+        renderers={this.renderers}
+        sourcePos={true}
+      />
+    ) : (
+      <p className={this.props.className}>{this.state.value}</p>
+    );
+
     return (
       <div onClick={this.onClicked}>
         {this.state.showEditor ? (
@@ -103,15 +114,15 @@ class ClickToEdit extends React.Component {
             value={this.state.value}
           />
         ) : (
-          <ReactMarkdown
-            source={this.state.value}
-            renderers={this.renderers}
-            sourcePos={true}
-          />
+          regularView
         )}
       </div>
     );
   }
 }
+
+ClickToEdit.defaultProps = {
+  markdown: true
+};
 
 export default ClickToEdit;

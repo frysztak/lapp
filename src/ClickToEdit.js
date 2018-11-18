@@ -35,21 +35,17 @@ class ClickToEdit extends React.Component {
     if (props.checked !== null) {
       this.checkboxCounter++;
       const id = `checkbox_${this.checkboxCounter}`;
-      const checkbox = (
-        <input
-          type="checkbox"
-          id={id}
-          checked={props.checked}
-          readOnly={true}
-        />
-      );
-      const label = <label htmlFor={id}>{props.children[0]}</label>;
 
       return ListItem(
         props,
         <div className="checkbox">
-          {checkbox}
-          {label}
+          <input
+            type="checkbox"
+            id={id}
+            checked={props.checked}
+            readOnly={true}
+          />
+          <label htmlFor={id}>{props.children[0]}</label>
         </div>
       );
     }

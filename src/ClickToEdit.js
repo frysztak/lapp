@@ -21,23 +21,40 @@ class ClickToEdit extends React.Component {
     };
   }
 
+  checkboxCounter = 0;
   listItemRenderer(props) {
-    let checkbox = null;
+    const ListItem = (props, children) => (
+      <li
+        onClick={props.checked !== null ? this.onCheckboxClicked : () => {}}
+        data-sourcepos={props["data-sourcepos"]}
+      >
+        {children}
+      </li>
+    );
+
     if (props.checked !== null) {
-      checkbox = (
-        <input type="checkbox" checked={props.checked} readOnly={true} />
+      this.checkboxCounter++;
+      const id = `checkbox_${this.checkboxCounter}`;
+      const checkbox = (
+        <input
+          type="checkbox"
+          id={id}
+          checked={props.checked}
+          readOnly={true}
+        />
+      );
+      const label = <label htmlFor={id}>{props.children[0]}</label>;
+
+      return ListItem(
+        props,
+        <div className="checkbox">
+          {checkbox}
+          {label}
+        </div>
       );
     }
 
-    return (
-      <li
-        onClick={checkbox ? this.onCheckboxClicked : () => {}}
-        data-sourcepos={props["data-sourcepos"]}
-      >
-        {checkbox}
-        {props.children}
-      </li>
-    );
+    return ListItem(props, props.children);
   }
 
   handleTextChange(text) {

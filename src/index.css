@@ -16,6 +16,7 @@ body {
 }
 
 .menu-header {
+  margin: 0.6em auto;
   font-size: 2em;
   text-align: center;
 }

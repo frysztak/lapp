@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "./App.css";
+import PlusSquareSolid from "./plus-square-solid.svg";
 import Slideout from "slideout";
 import NoteEditor from "./NoteEditor";
 import NoteManager from "./NoteManager";
@@ -79,15 +80,16 @@ class App extends Component {
     return (
       <div>
         <nav id="menu">
-          <header>
-            <div className="menu-header">Your notes</div>
+          <header className="menu-header">
+            <div>Lapp</div>
+            <img
+              className="menu-plus"
+              onClick={this.addNewNote}
+              src={PlusSquareSolid}
+              alt="plus"
+            />
           </header>
           <ul className="menu-note-list">{files}</ul>
-          <div className="button-container">
-            <button className="round-button" onClick={this.addNewNote}>
-              +
-            </button>
-          </div>
         </nav>
 
         <main id="panel">

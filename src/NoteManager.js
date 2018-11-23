@@ -27,7 +27,7 @@ class NoteManager {
     if (note === null) {
       throw Error("Note not found");
     }
-    return note
+    return note;
   }
 
   addToLocalStorage(note) {
@@ -41,6 +41,11 @@ class NoteManager {
   insertNote(note) {
     this.notes.push(note);
     this.addToLocalStorage(note);
+  }
+
+  deleteNote(note) {
+    this.notes = this.notes.filter(item => item !== note);
+    this.removeFromLocalStorage(note);
   }
 
   replaceNote(oldNote, newNote) {
@@ -61,14 +66,14 @@ class NoteManager {
   }
 
   updateNoteText(noteName, newText) {
-    const note = this.findNote(noteName)
+    const note = this.findNote(noteName);
     const newNote = note.updateText(newText);
     this.replaceNote(note, newNote);
     return newNote;
   }
 
   updateNoteName(noteName, newName) {
-    const note = this.findNote(noteName)
+    const note = this.findNote(noteName);
     const newNote = note.updateName(newName);
     this.replaceNote(note, newNote);
     return newNote;

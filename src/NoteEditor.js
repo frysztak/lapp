@@ -1,5 +1,9 @@
 import React from "react";
 import ClickToEdit from "./ClickToEdit";
+import ReactModal from "react-modal";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons/faTrash";
 
 class NoteEditor extends React.Component {
   constructor(props) {
@@ -8,9 +12,12 @@ class NoteEditor extends React.Component {
     this.handleTextChange = this.handleTextChange.bind(this);
     this.onNoteNameChanged = this.onNoteNameChanged.bind(this);
     this.onNoteTextChanged = this.onNoteTextChanged.bind(this);
+    this.handleCloseModal = this.handleCloseModal.bind(this);
+    this.deleteNote = this.deleteNote.bind(this);
 
     this.state = {
-      currentNote: this.props.currentNote
+      currentNote: this.props.currentNote,
+      showDeletionModal: false
     };
   }
 
@@ -33,22 +40,67 @@ class NoteEditor extends React.Component {
     this.props.onNoteNameChanged(text);
   }
 
+  handleCloseModal() {
+    this.setState({ showDeletionModal: false });
+  }
+
+  deleteNote() {
+    this.props.onDeleteNote(this.state.currentNote);
+    this.setState({ showDeletionModal: false });
+  }
+
   render() {
     return (
       <div>
-        <ClickToEdit
-          text={this.state.currentNote.name}
-          rows={1}
-          className="note-name"
-          markdown={false}
-          onTextChange={this.onNoteNameChanged}
-        />
+        <div className="note-header">
+          <ClickToEdit
+            text={this.state.currentNote.name}
+            rows={1}
+            className="note-name"
+            markdown={false}
+            onTextChange={this.onNoteNameChanged}
+          />
+          <FontAwesomeIcon
+            icon={faTrash}
+            className="icon"
+            onClick={_ => this.setState({ showDeletionModal: true })}
+          />
+        </div>
         <ClickToEdit
           text={this.state.currentNote.text}
           rows={6}
           className="note-body"
           onTextChange={this.onNoteTextChanged}
         />
+
+        <ReactModal
+          isOpen={this.state.showDeletionModal}
+          contentLabel="Minimal Modal Example"
+          style={{
+            overlay: {
+              zIndex: 1
+            },
+            content: {
+              border: "0",
+              borderRadius: "4px",
+              bottom: "auto",
+              minHeight: "10rem",
+              left: "50%",
+              padding: "2rem",
+              position: "fixed",
+              right: "auto",
+              top: "50%",
+              transform: "translate(-50%,-50%)",
+              minWidth: "20rem",
+              width: "80%",
+              maxWidth: "60rem"
+            }
+          }}
+        >
+          <p>Are you sure you want to delete this note?</p>
+          <button onClick={this.handleCloseModal}>No</button>
+          <button onClick={this.deleteNote}>Yes</button>
+        </ReactModal>
       </div>
     );
   }

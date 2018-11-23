@@ -169,19 +169,12 @@ button::-moz-focus-inner {
   border: 0;
 }
 
-.button-container {
+.note-header {
+  display: flex;
+  align-items: baseline;
 }
 
-.round-button {
-  height: 48px;
-  width: 48px;
-  box-sizing: border-box;
-  border-radius: 50%;
-  background-color: transparent;
-  color: white;
-  text-align: center;
-  font-size: 2em;
-  border: 2px solid white;
-  outline: none;
-  display: inline-block;
+.icon:hover {
+  color: #aa4465;
+  filter: drop-shadow(0 0 5px rgba(170, 68, 101, 0.3));
 }

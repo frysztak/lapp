@@ -4,6 +4,7 @@ import PlusSquareSolid from "./plus-square-solid.svg";
 import Slideout from "slideout";
 import NoteEditor from "./NoteEditor";
 import NoteManager from "./NoteManager";
+import ReactModal from "react-modal";
 
 const File = (noteName, isActive, clickHandler) => {
   return (
@@ -18,6 +19,8 @@ const File = (noteName, isActive, clickHandler) => {
   );
 };
 
+ReactModal.setAppElement("#root");
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -26,6 +29,7 @@ class App extends Component {
     this.handleNoteTextChange = this.handleNoteTextChange.bind(this);
     this.handleNoteNameChange = this.handleNoteNameChange.bind(this);
     this.addNewNote = this.addNewNote.bind(this);
+    this.deleteNote = this.deleteNote.bind(this);
 
     this.noteManager = new NoteManager();
 
@@ -71,6 +75,11 @@ class App extends Component {
     this.setState({ currentNote: note });
   }
 
+  deleteNote(note) {
+    this.noteManager.deleteNote(note);
+    this.setState({ currentNote: this.noteManager.getNewestNote() });
+  }
+
   render() {
     const files = this.noteManager.notes.map(note => {
       const isActive = this.state.currentNote.name === note.name;
@@ -98,6 +107,7 @@ class App extends Component {
               currentNote={this.state.currentNote}
               onNoteNameChanged={this.handleNoteNameChange}
               onNoteTextChanged={this.handleNoteTextChange}
+              onDeleteNote={this.deleteNote}
             />
           </div>
         </main>

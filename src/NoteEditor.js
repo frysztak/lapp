@@ -78,7 +78,8 @@ class NoteEditor extends React.Component {
           contentLabel="Minimal Modal Example"
           style={{
             overlay: {
-              zIndex: 1
+              zIndex: 1,
+              backgroundColor: "rgba(0, 0, 0, 0.5)"
             },
             content: {
               border: "0",
@@ -99,7 +100,9 @@ class NoteEditor extends React.Component {
         >
           <p>Are you sure you want to delete this note?</p>
           <button onClick={this.handleCloseModal}>No</button>
-          <button onClick={this.deleteNote}>Yes</button>
+          <button className="button is-primary" onClick={this.deleteNote}>
+            Yes
+          </button>
         </ReactModal>
       </div>
     );

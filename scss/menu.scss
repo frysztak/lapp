@@ -1,0 +1,24 @@
+.menu-header {
+  text-align: center;
+}
+
+i#plusIcon:hover {
+  filter: drop-shadow(0 0 5px darken($slideout-menu-text, 20%));
+}
+
+.menu-note-list {
+  font-size: 1.5em;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menu-note-list-item {
+  font-size: 1em;
+  margin: 1em 0 1em 0.25em;
+  padding: 0;
+}
+
+#inactive.menu-note-list-item {
+  color: lighten($color: $light-text-color, $amount: 30%);
+}

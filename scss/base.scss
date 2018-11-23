@@ -1,0 +1,17 @@
+// Import the initial variables (only needed if you want to customise this file):
+@import "bulma/sass/utilities/initial-variables";
+@import "bulma/sass/utilities/functions";
+@import url("https://fonts.googleapis.com/css?family=Lato:300");
+
+$family-sans-serif: "Lato", sans-serif;
+
+$light-background-color: #fcfafc;
+$light-background-secondary-color: #333333;
+$light-text-color: #333333;
+$light-text-secondary-color: #e0e0e0;
+$lighter-text-color: #888995;
+
+$body-background-color: $light-background-color;
+
+// Import the rest of Bulma:
+@import "bulma/bulma.sass";

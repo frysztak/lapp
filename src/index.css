@@ -15,6 +15,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/*
 .menu-header {
   margin: 0.6em 0;
   display: flex;
@@ -29,23 +30,7 @@ body {
   height: 32px;
   margin: 0 5%;
 }
-
-.menu-note-list {
-  font-size: 1.5em;
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
-
-.menu-note-list-item {
-  font-size: 1em;
-  margin: 1em 0 1em 0.25em;
-  padding: 0;
-}
-
-#inactive.menu-note-list-item {
-  color: var(--lighter-text-color);
-}
+*/
 
 .note-name {
   font-size: 2em;
@@ -58,46 +43,6 @@ body {
   margin: 0.6em 0.3em;
   font-size: 1.5em;
   font-family: "Lato", sans-serif; /* needs to be set explicitly, in order to override textarea default value */
-}
-
-.slideout-menu {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  width: 256px;
-  min-height: 100vh;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  z-index: 0;
-  display: none;
-  background-color: var(--light-background-secondary-color);
-  color: var(--light-text-secondary-color);
-}
-
-.slideout-menu-left {
-  left: 0;
-}
-
-.slideout-menu-right {
-  right: 0;
-}
-
-.slideout-panel {
-  position: relative;
-  z-index: 1;
-  will-change: transform;
-  background-color: var(--light-background-color);
-  min-height: 100vh;
-}
-
-.slideout-open,
-.slideout-open body,
-.slideout-open .slideout-panel {
-  overflow: hidden;
-}
-
-.slideout-open .slideout-menu {
-  display: block;
 }
 
 /* taken from https://medium.com/claritydesignsystem/pure-css-accessible-checkboxes-and-radios-buttons-54063e759bb3 */
@@ -177,4 +122,8 @@ button::-moz-focus-inner {
 .icon:hover {
   color: #aa4465;
   filter: drop-shadow(0 0 5px rgba(170, 68, 101, 0.3));
+}
+
+header {
+  text-align: center;
 }

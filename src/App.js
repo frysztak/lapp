@@ -6,6 +6,9 @@ import NoteEditor from "./NoteEditor";
 import NoteManager from "./NoteManager";
 import ReactModal from "react-modal";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlusSquare } from "@fortawesome/free-solid-svg-icons/faPlusSquare";
+
 const File = (noteName, isActive, clickHandler) => {
   return (
     <li
@@ -90,13 +93,15 @@ class App extends Component {
       <div>
         <nav id="menu">
           <header className="menu-header">
-            <div>Lapp</div>
-            <img
-              className="menu-plus"
-              onClick={this.addNewNote}
-              src={PlusSquareSolid}
-              alt="plus"
-            />
+            <span className="is-size-2">
+              <span>Lapp</span>
+              <i
+                style={{ paddingLeft: 5 }}
+                onClick={this.addNewNote}
+                className="fas fa-plus-square"
+                id="plusIcon"
+              />
+            </span>
           </header>
           <ul className="menu-note-list">{files}</ul>
         </nav>

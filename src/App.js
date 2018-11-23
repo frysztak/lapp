@@ -1,13 +1,9 @@
 import React, { Component } from "react";
 import "./App.css";
-import PlusSquareSolid from "./plus-square-solid.svg";
 import Slideout from "slideout";
 import NoteEditor from "./NoteEditor";
 import NoteManager from "./NoteManager";
 import ReactModal from "react-modal";
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlusSquare } from "@fortawesome/free-solid-svg-icons/faPlusSquare";
 
 const File = (noteName, isActive, clickHandler) => {
   return (

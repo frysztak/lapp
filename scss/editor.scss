@@ -1,0 +1,25 @@
+.note-name {
+  font-size: $size-3;
+  font-weight: bold;
+  margin: 0.6em 0.3em;
+  font-family: $family-sans-serif; /* needs to be set explicitly, in order to override textarea default value */
+}
+
+.note-body {
+  margin: 0.6em 0.3em;
+  font-size: $size-4;
+  font-family: $family-sans-serif; /* needs to be set explicitly, in order to override textarea default value */
+  ul {
+    padding: 0 $size-2;
+    list-style: disc;
+  }
+}
+
+.note-header {
+  display: flex;
+  align-items: center;
+}
+
+i#deleteIcon:hover {
+  filter: drop-shadow(0 0 5px darken($danger, 20%));
+}

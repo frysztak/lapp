@@ -2,9 +2,6 @@ import React from "react";
 import ClickToEdit from "./ClickToEdit";
 import ReactModal from "react-modal";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons/faTrash";
-
 class NoteEditor extends React.Component {
   constructor(props) {
     super(props);
@@ -60,10 +57,11 @@ class NoteEditor extends React.Component {
             markdown={false}
             onTextChange={this.onNoteNameChanged}
           />
-          <FontAwesomeIcon
-            icon={faTrash}
-            className="icon"
+          <i
+            style={{ paddingLeft: 5 }}
             onClick={_ => this.setState({ showDeletionModal: true })}
+            className="fas fa-trash has-text-danger"
+            id="deleteIcon"
           />
         </div>
         <ClickToEdit

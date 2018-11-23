@@ -20,8 +20,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "build-css": "node-sass-chokidar --include-path ./scss --include-path ./node_modules scss/ -o src/",
-    "watch-css": "npm run build-css && node-sass-chokidar --include-path ./scss --include-path ./node_modules scss/ -o src/ --watch --recursive"
+    "build-css": "node-sass-chokidar ./scss/main.scss --include-path ./node_modules -o src/",
+    "watch-css": "npm run build-css && node-sass-chokidar ./scss/main.scss --include-path ./node_modules -o src/ --watch --recursive"
   },
   "eslintConfig": {
     "extends": "react-app"

@@ -23,3 +23,7 @@
 i#deleteIcon:hover {
   filter: drop-shadow(0 0 5px darken($danger, 20%));
 }
+
+.checkbox-label {
+  margin: 0px !important;
+}

@@ -52,7 +52,6 @@ class NoteEditor extends React.Component {
         <div className="note-header">
           <ClickToEdit
             text={this.state.currentNote.name}
-            rows={1}
             id="note-name"
             plainText={true}
             disableToolbar={true}
@@ -67,8 +66,8 @@ class NoteEditor extends React.Component {
         </div>
         <ClickToEdit
           text={this.state.currentNote.text}
-          rows={6}
           className="note-body"
+          plainText={false}
           onTextChange={this.onNoteTextChanged}
         />
 

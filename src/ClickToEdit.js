@@ -12,7 +12,7 @@ class ClickToEdit extends React.Component {
     this.onEditorKeyDown = this.onEditorKeyDown.bind(this);
 
     this.state = {
-      content: this.textToDelta(props.text)
+      content: this.props.plainText ? this.textToDelta(props.text) : props.text
     };
 
     this.quillRef = React.createRef();
@@ -63,6 +63,8 @@ class ClickToEdit extends React.Component {
     const fullDelta = editor.getContents();
     if (this.props.plainText) {
       this.props.onTextChange(toPlaintext(fullDelta));
+    } else {
+      this.props.onTextChange(fullDelta);
     }
     this.setState({ content: fullDelta });
   }
@@ -76,8 +78,12 @@ class ClickToEdit extends React.Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (this.props.text !== prevProps.text) {
-      const delta = this.textToDelta(this.props.text);
+      const delta = this.props.plainText
+        ? this.textToDelta(this.props.text)
+        : this.props.text;
+
       this.setState({ content: delta });
+
       const updateDelta = this.quillRef.current
         .getEditor()
         .getContents()

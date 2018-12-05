@@ -53,8 +53,9 @@ class NoteEditor extends React.Component {
           <ClickToEdit
             text={this.state.currentNote.name}
             rows={1}
-            className="note-name"
-            markdown={false}
+            id="note-name"
+            plainText={true}
+            disableToolbar={true}
             onTextChange={this.onNoteNameChanged}
           />
           <i

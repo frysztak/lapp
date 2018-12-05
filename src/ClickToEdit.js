@@ -1,142 +1,112 @@
 import React from "react";
-import ReactMarkdown from "react-markdown";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import toPlaintext from "quill-delta-to-plaintext";
+import * as Delta from "quill-delta";
 
 class ClickToEdit extends React.Component {
   constructor(props) {
     super(props);
 
     this.handleTextChange = this.handleTextChange.bind(this);
-    this.onClicked = this.onClicked.bind(this);
-    this.onEditorLostFocus = this.onEditorLostFocus.bind(this);
     this.onEditorKeyDown = this.onEditorKeyDown.bind(this);
-    this.onCheckboxClicked = this.onCheckboxClicked.bind(this);
 
     this.state = {
-      value: props.text,
-      showEditor: false
+      content: this.textToDelta(props.text)
     };
 
-    this.renderers = {
-      listItem: this.listItemRenderer.bind(this)
-    };
+    this.quillRef = React.createRef();
+
+    this.modules = props.disableToolbar
+      ? { toolbar: null }
+      : {
+          toolbar: [
+            [{ header: "1" }, { header: "2" }, { font: [] }],
+            [{ size: [] }],
+            ["bold", "italic", "underline", "strike", "blockquote"],
+            [
+              { list: "ordered" },
+              { list: "bullet" },
+              { indent: "-1" },
+              { indent: "+1" }
+            ],
+            ["link", "image", "video"],
+            ["clean"]
+          ]
+        };
+
+    this.formats = props.plainText
+      ? []
+      : [
+          "header",
+          "font",
+          "size",
+          "bold",
+          "italic",
+          "underline",
+          "strike",
+          "blockquote",
+          "list",
+          "bullet",
+          "indent",
+          "link",
+          "image",
+          "video"
+        ];
   }
 
-  checkboxCounter = 0;
-  listItemRenderer(props) {
-    const ListItem = (props, children) => (
-      <li
-        onClick={props.checked !== null ? this.onCheckboxClicked : () => {}}
-        data-sourcepos={props["data-sourcepos"]}
-      >
-        {children}
-      </li>
-    );
+  textToDelta(text) {
+    return new Delta().insert(text);
+  }
 
-    if (props.checked !== null) {
-      this.checkboxCounter++;
-      const id = `checkbox_${this.checkboxCounter}`;
-
-      return ListItem(
-        props,
-        <div>
-          <input
-            className="is-checkradio is-info"
-            type="checkbox"
-            id={id}
-            checked={props.checked}
-            readOnly={true}
-          />
-          <label htmlFor={id} className="checkbox-label">{props.children[0]}</label>
-        </div>
-      );
+  handleTextChange(content, delta, source, editor) {
+    const fullDelta = editor.getContents();
+    if (this.props.plainText) {
+      this.props.onTextChange(toPlaintext(fullDelta));
     }
-
-    return ListItem(props, props.children);
-  }
-
-  handleTextChange(text) {
-    this.props.onTextChange(text);
-    this.setState({ value: text });
-  }
-
-  onEditorLostFocus() {
-    this.setState({ showEditor: false });
+    this.setState({ content: fullDelta });
   }
 
   onEditorKeyDown(e) {
     // detect escape key
     if (e.keyCode === 27) {
-      this.onEditorLostFocus();
+      this.quillRef.current.getEditor().blur();
     }
-  }
-
-  onClicked() {
-    this.setState({ showEditor: true });
-  }
-
-  onCheckboxClicked(e) {
-    e.stopPropagation();
-    const sourcepos = e.currentTarget.getAttribute("data-sourcepos");
-    this.tickCheckbox(sourcepos);
-  }
-
-  tickCheckbox(sourcepos) {
-    let splits = sourcepos.split("-");
-    if (splits.length < 1) return;
-    const beginning = splits[0];
-
-    splits = beginning.split(":");
-    if (splits.length < 1) return;
-    const lineIdx = splits[0] - 1; // indexing starts with 1
-
-    let lines = this.state.value.split("\n");
-    if (lines.length <= lineIdx) return;
-    lines[lineIdx] = lines[lineIdx].replace("[ ]", "[x]");
-    this.handleTextChange(lines.join("\n"));
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (this.props.text !== prevProps.text) {
-      this.setState({ value: this.props.text });
+      const delta = this.textToDelta(this.props.text);
+      this.setState({ content: delta });
+      const updateDelta = this.quillRef.current
+        .getEditor()
+        .getContents()
+        .diff(delta);
+      this.quillRef.current.getEditor().updateContents(updateDelta);
     }
   }
 
   render() {
-    const regularView = this.props.markdown ? (
-      <ReactMarkdown
-        className={this.props.className}
-        source={this.state.value}
-        renderers={this.renderers}
-        sourcePos={true}
-      />
-    ) : (
-      <p className={this.props.className}>{this.state.value}</p>
-    );
-
     return (
-      <div onClick={this.onClicked}>
-        {this.state.showEditor ? (
-          <textarea
-            ref="editor"
-            className={this.props.className}
-            rows={this.props.rows}
-            cols="50"
-            autoFocus={true}
-            onBlur={this.onEditorLostFocus}
-            onKeyDown={this.onEditorKeyDown}
-            onChange={e => this.handleTextChange(e.target.value)}
-            value={this.state.value}
-          />
-        ) : (
-          regularView
-        )}
-      </div>
+      <ReactQuill
+        defaultValue={this.state.content}
+        ref={this.quillRef}
+        bounds={"#panel"}
+        placeholder="Your note..."
+        modules={this.modules}
+        formats={this.formats}
+        id={this.props.id}
+        theme={this.props.plainText ? null : "snow"}
+        onChange={this.handleTextChange}
+        onKeyDown={this.onEditorKeyDown}
+      />
     );
   }
 }
 
 ClickToEdit.defaultProps = {
-  markdown: true
+  plainText: false,
+  disableToolbar: false
 };
 
 export default ClickToEdit;

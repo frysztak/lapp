@@ -11,10 +11,6 @@ class ClickToEdit extends React.Component {
     this.handleTextChange = this.handleTextChange.bind(this);
     this.onEditorKeyDown = this.onEditorKeyDown.bind(this);
 
-    this.state = {
-      content: this.props.plainText ? this.textToDelta(props.text) : props.text
-    };
-
     this.quillRef = React.createRef();
 
     this.modules = props.disableToolbar
@@ -66,7 +62,6 @@ class ClickToEdit extends React.Component {
     } else {
       this.props.onTextChange(fullDelta);
     }
-    this.setState({ content: fullDelta });
   }
 
   onEditorKeyDown(e) {
@@ -82,13 +77,8 @@ class ClickToEdit extends React.Component {
         ? this.textToDelta(this.props.text)
         : this.props.text;
 
-      this.setState({ content: delta });
-      //this.quillRef.current.getEditor().setContents(delta);
-
       const contents = this.quillRef.current.getEditor().getContents();
-
       const updateDelta = contents.diff(delta);
-      console.log(updateDelta);
       this.quillRef.current.getEditor().updateContents(updateDelta);
     }
   }
@@ -96,7 +86,7 @@ class ClickToEdit extends React.Component {
   render() {
     return (
       <ReactQuill
-        defaultValue={this.state.content}
+        defaultValue={this.props.text}
         ref={this.quillRef}
         bounds={"#panel"}
         placeholder="Your note..."

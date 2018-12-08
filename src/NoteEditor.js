@@ -13,15 +13,8 @@ class NoteEditor extends React.Component {
     this.deleteNote = this.deleteNote.bind(this);
 
     this.state = {
-      currentNote: this.props.currentNote,
       showDeletionModal: false
     };
-  }
-
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if (this.props.currentNote !== prevProps.currentNote) {
-      this.setState({ currentNote: this.props.currentNote });
-    }
   }
 
   handleTextChange(e) {
@@ -47,11 +40,12 @@ class NoteEditor extends React.Component {
   }
 
   render() {
+    const currentNote = this.props.currentNote;
     return (
       <div>
         <div className="note-header">
           <ClickToEdit
-            text={this.state.currentNote.name}
+            text={currentNote.name}
             id="note-name"
             plainText={true}
             disableToolbar={true}
@@ -65,7 +59,7 @@ class NoteEditor extends React.Component {
           />
         </div>
         <ClickToEdit
-          text={this.state.currentNote.text}
+          text={currentNote.text}
           className="note-body"
           plainText={false}
           onTextChange={this.onNoteTextChanged}

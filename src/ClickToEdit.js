@@ -83,11 +83,12 @@ class ClickToEdit extends React.Component {
         : this.props.text;
 
       this.setState({ content: delta });
+      //this.quillRef.current.getEditor().setContents(delta);
 
-      const updateDelta = this.quillRef.current
-        .getEditor()
-        .getContents()
-        .diff(delta);
+      const contents = this.quillRef.current.getEditor().getContents();
+
+      const updateDelta = contents.diff(delta);
+      console.log(updateDelta);
       this.quillRef.current.getEditor().updateContents(updateDelta);
     }
   }

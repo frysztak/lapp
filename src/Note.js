@@ -1,5 +1,7 @@
+import * as Delta from "quill-delta";
+
 class Note {
-  constructor(name, text = "", lastEdit = Date()) {
+  constructor(name, text = Delta(), lastEdit = Date()) {
     this.name = name;
     this.text = text;
     this.lastEdit = lastEdit;
@@ -7,7 +9,7 @@ class Note {
 
   static parse(json) {
     const obj = JSON.parse(json);
-    return new Note(obj.name, obj.text, obj.lastEdit);
+    return new Note(obj.name, new Delta(obj.text), obj.lastEdit);
   }
 
   serialise() {
@@ -15,11 +17,11 @@ class Note {
   }
 
   updateText(newText) {
-    return new Note(this.name, newText, Date())
+    return new Note(this.name, newText, Date());
   }
 
   updateName(newName) {
-    return new Note(newName, this.text, Date())
+    return new Note(newName, this.text, Date());
   }
 }
 

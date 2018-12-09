@@ -4,6 +4,25 @@ import "react-quill/dist/quill.snow.css";
 import toPlaintext from "quill-delta-to-plaintext";
 import * as Delta from "quill-delta";
 
+const CustomToolbar = onDeleteClicked => (
+  <div id="toolbar">
+    <button className="ql-bold" />
+    <button className="ql-italic" />
+    <button className="ql-blockquote" />
+    <button className="ql-list" value="ordered" />
+    <button className="ql-list" value="bullet" />
+    <button className="ql-list" value="check" />
+    <button className="ql-deleteNote">
+      <i
+        style={{ paddingLeft: 5 }}
+        onClick={_ => onDeleteClicked.bind(this)}
+        className="fas fa-trash has-text-danger"
+        id="deleteIcon"
+      />
+    </button>
+  </div>
+);
+
 class ClickToEdit extends React.Component {
   constructor(props) {
     super(props);
@@ -16,19 +35,9 @@ class ClickToEdit extends React.Component {
     this.modules = props.disableToolbar
       ? { toolbar: null }
       : {
-          toolbar: [
-            [{ header: "1" }, { header: "2" }, { font: [] }],
-            [{ size: [] }],
-            ["bold", "italic", "underline", "strike", "blockquote"],
-            [
-              { list: "ordered" },
-              { list: "bullet" },
-              { indent: "-1" },
-              { indent: "+1" }
-            ],
-            ["link", "image", "video"],
-            ["clean"]
-          ]
+          toolbar: {
+            container: "#toolbar"
+          }
         };
 
     this.formats = props.plainText
@@ -85,18 +94,21 @@ class ClickToEdit extends React.Component {
 
   render() {
     return (
-      <ReactQuill
-        defaultValue={this.props.text}
-        ref={this.quillRef}
-        bounds={"#panel"}
-        placeholder="Your note..."
-        modules={this.modules}
-        formats={this.formats}
-        id={this.props.id}
-        theme={this.props.plainText ? null : "snow"}
-        onChange={this.handleTextChange}
-        onKeyDown={this.onEditorKeyDown}
-      />
+      <div>
+        {this.props.disableToolbar ? null : <CustomToolbar />}
+        <ReactQuill
+          defaultValue={this.props.text}
+          ref={this.quillRef}
+          bounds={"#panel"}
+          placeholder="Your note..."
+          modules={this.modules}
+          formats={this.formats}
+          id={this.props.id}
+          theme={this.props.plainText ? null : "snow"}
+          onChange={this.handleTextChange}
+          onKeyDown={this.onEditorKeyDown}
+        />
+      </div>
     );
   }
 }

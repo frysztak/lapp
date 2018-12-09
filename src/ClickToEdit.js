@@ -4,7 +4,7 @@ import "react-quill/dist/quill.snow.css";
 import toPlaintext from "quill-delta-to-plaintext";
 import * as Delta from "quill-delta";
 
-const CustomToolbar = onDeleteClicked => (
+const CustomToolbar = () => (
   <div id="toolbar">
     <button className="ql-bold" />
     <button className="ql-italic" />
@@ -15,7 +15,6 @@ const CustomToolbar = onDeleteClicked => (
     <button className="ql-deleteNote">
       <i
         style={{ paddingLeft: 5 }}
-        onClick={_ => onDeleteClicked.bind(this)}
         className="fas fa-trash has-text-danger"
         id="deleteIcon"
       />

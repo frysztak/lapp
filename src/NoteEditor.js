@@ -27,7 +27,7 @@ class NoteEditor extends React.Component {
   }
 
   onNoteNameChanged(text) {
-    this.props.onNoteNameChanged(text);
+    this.props.onNoteNameChanged(text.trim());
   }
 
   handleCloseModal() {
@@ -35,7 +35,7 @@ class NoteEditor extends React.Component {
   }
 
   deleteNote() {
-    this.props.onDeleteNote(this.state.currentNote);
+    this.props.onDeleteNote(this.props.currentNote);
     this.setState({ showDeletionModal: false });
   }
 

@@ -17,7 +17,7 @@ class NoteManager {
 
   addNewNote() {
     // TODO: what if note named 'new note' already exists?
-    const note = new Note("new note", "", Date());
+    const note = new Note("new note");
     this.insertNote(note);
     return note;
   }

@@ -1,7 +1,7 @@
 import * as Delta from "quill-delta";
 
 class Note {
-  constructor(name, text = Delta(), lastEdit = Date()) {
+  constructor(name, text = new Delta(), lastEdit = Date()) {
     this.name = name;
     this.text = text;
     this.lastEdit = lastEdit;

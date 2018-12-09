@@ -60,7 +60,7 @@ class NoteEditor extends React.Component {
         </div>
         <ClickToEdit
           text={currentNote.text}
-          className="note-body"
+          id="note-body"
           plainText={false}
           onTextChange={this.onNoteTextChanged}
         />

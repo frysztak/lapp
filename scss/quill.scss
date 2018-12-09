@@ -1,3 +1,15 @@
 div#note-name.quill > div.ql-container {
   font-size: 2em;
 }
+
+div#note-body.quill > div.ql-container {
+  font-size: 1.25rem;
+}
+
+.ql-editor ul[data-checked="true"] li {
+  text-decoration: line-through;
+}
+
+.ql-editor {
+  font-family: $family-sans-serif;
+}

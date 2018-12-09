@@ -1,0 +1,17 @@
+patch-package
+--- a/node_modules/quill/formats/list.js
++++ b/node_modules/quill/formats/list.js
+@@ -73,8 +73,12 @@ class List extends Container {
+         blot.format('list', 'checked');
+       }
+     }
++    const listTouchEventHandler = (e) => {
++      e.preventDefault();
++      return listEventHandler(e);
++    }
+ 
+-    domNode.addEventListener('touchstart', listEventHandler);
++    domNode.addEventListener('touchstart', listTouchEventHandler);
+     domNode.addEventListener('mousedown', listEventHandler);
+   }
+ 

@@ -9,7 +9,6 @@ class NoteEditor extends React.Component {
     this.handleTextChange = this.handleTextChange.bind(this);
     this.onNoteNameChanged = this.onNoteNameChanged.bind(this);
     this.onNoteTextChanged = this.onNoteTextChanged.bind(this);
-    this.handleCloseModal = this.handleCloseModal.bind(this);
     this.deleteNote = this.deleteNote.bind(this);
 
     this.state = {
@@ -28,10 +27,6 @@ class NoteEditor extends React.Component {
 
   onNoteNameChanged(text) {
     this.props.onNoteNameChanged(text.trim());
-  }
-
-  handleCloseModal() {
-    this.setState({ showDeletionModal: false });
   }
 
   deleteNote() {
@@ -78,16 +73,42 @@ class NoteEditor extends React.Component {
               top: "50%",
               transform: "translate(-50%,-50%)",
               minWidth: "20rem",
-              width: "80%",
+              width: "50%",
               maxWidth: "60rem"
             }
           }}
         >
-          <p>Are you sure you want to delete this note?</p>
-          <button onClick={this.handleCloseModal}>No</button>
-          <button className="button is-primary" onClick={this.deleteNote}>
-            Yes
-          </button>
+          <i
+            style={{ margin: "-20px" }}
+            className="fas fa-times is-pulled-right is-size-5"
+            onClick={() => this.setState({ showDeletionModal: false })}
+            id="deleteIcon"
+          />
+
+          <p className="has-text-centered is-size-4">
+            Are you sure you want to delete this note? This action cannot be
+            reverted.
+          </p>
+
+          <div
+            className="level is-mobile"
+            style={{ justifyContent: "flex-end" }}
+          >
+            <button
+              className="is-size-5 button is-secondary"
+              style={{ marginRight: "8px" }}
+              onClick={() => this.setState({ showDeletionModal: false })}
+            >
+              No
+            </button>
+
+            <button
+              className="is-size-5 button is-primary"
+              onClick={this.deleteNote}
+            >
+              Yes
+            </button>
+          </div>
         </ReactModal>
       </div>
     );

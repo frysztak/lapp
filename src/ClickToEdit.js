@@ -36,7 +36,10 @@ class ClickToEdit extends React.Component {
       ? { toolbar: null }
       : {
           toolbar: {
-            container: "#toolbar"
+            container: "#toolbar",
+            handlers: {
+              deleteNote: () => this.props.onDeleteNoteClicked()
+            }
           }
         };
 

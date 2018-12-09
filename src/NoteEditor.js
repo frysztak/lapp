@@ -43,26 +43,19 @@ class NoteEditor extends React.Component {
     const currentNote = this.props.currentNote;
     return (
       <div>
-        <div className="note-header">
-          <ClickToEdit
-            text={currentNote.name}
-            id="note-name"
-            plainText={true}
-            disableToolbar={true}
-            onTextChange={this.onNoteNameChanged}
-          />
-          <i
-            style={{ paddingLeft: 5 }}
-            onClick={_ => this.setState({ showDeletionModal: true })}
-            className="fas fa-trash has-text-danger"
-            id="deleteIcon"
-          />
-        </div>
+        <ClickToEdit
+          text={currentNote.name}
+          id="note-name"
+          plainText={true}
+          disableToolbar={true}
+          onTextChange={this.onNoteNameChanged}
+        />
         <ClickToEdit
           text={currentNote.text}
           id="note-body"
           plainText={false}
           onTextChange={this.onNoteTextChanged}
+          onDeleteNoteClicked={() => this.setState({ showDeletionModal: true })}
         />
 
         <ReactModal

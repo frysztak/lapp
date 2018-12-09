@@ -4,14 +4,10 @@ class NoteManager {
   constructor() {
     this.notes = [];
 
-    if (localStorage.length === 0) {
-      this.addNewNote();
-    } else {
-      for (let i = 0; i < localStorage.length; i++) {
-        const noteName = localStorage.key(i);
-        const note = Note.parse(localStorage.getItem(noteName));
-        this.insertNote(note);
-      }
+    for (let i = 0; i < localStorage.length; i++) {
+      const noteName = localStorage.key(i);
+      const note = Note.parse(localStorage.getItem(noteName));
+      this.insertNote(note);
     }
   }
 

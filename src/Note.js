@@ -1,4 +1,4 @@
-import * as Delta from "quill-delta";
+import Delta from "quill-delta";
 
 class Note {
   constructor(name, text = new Delta(), lastEdit = Date()) {

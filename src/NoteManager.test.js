@@ -17,6 +17,7 @@ describe("With pre-exising notes", () => {
     new Note("note", new Delta().insert("my note"), Date()),
     new Note("note2", new Delta().insert("a very cool note"), Date())
   ];
+
   beforeEach(() => {
     localStorage.clear();
     const manager = new NoteManager();
@@ -25,12 +26,25 @@ describe("With pre-exising notes", () => {
     }
   });
 
-  it("Load pre-existing notes", () => {
+  test("Load pre-existing notes", () => {
     const manager = new NoteManager();
     expect(manager.notes).toEqual(initialNotes);
   });
 
-  it("Find note", () => {
+  test("Add new note", () => {
+    const manager = new NoteManager();
+    const note = manager.addNewNote();
+    expect(manager.notes).toEqual([...initialNotes, note]);
+  });
+
+  test("Delete current note", () => {
+    const manager = new NoteManager();
+    manager.deleteNote(initialNotes[0]);
+    console.log(manager.notes);
+    expect(manager.notes).toEqual([initialNotes[1]]);
+  });
+
+  test("Find note", () => {
     const manager = new NoteManager();
     const foundNote = manager.findNote(initialNotes[0].name);
     expect(foundNote).toEqual(initialNotes[0]);

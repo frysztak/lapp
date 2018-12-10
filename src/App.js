@@ -5,19 +5,6 @@ import NoteEditor from "./NoteEditor";
 import NoteManager from "./NoteManager";
 import ReactModal from "react-modal";
 
-const File = (noteName, isActive, clickHandler) => {
-  return (
-    <li
-      className="menu-note-list-item"
-      id={isActive ? "active" : "inactive"}
-      key={noteName}
-      onClick={clickHandler}
-    >
-      {noteName}
-    </li>
-  );
-};
-
 ReactModal.setAppElement("#root");
 
 class App extends Component {
@@ -31,6 +18,9 @@ class App extends Component {
     this.deleteNote = this.deleteNote.bind(this);
 
     this.noteManager = new NoteManager();
+    if (this.noteManager.notes.length === 0) {
+      this.noteManager.addNewNote();
+    }
 
     this.state = {
       currentNote: this.noteManager.getNewestNote()
@@ -48,14 +38,14 @@ class App extends Component {
   }
 
   fileClicked(e) {
-    const noteName = e.target.innerHTML;
-    const note = this.noteManager.findNote(noteName);
+    const noteID = e.target.dataset.id;
+    const note = this.noteManager.findNote(noteID);
     this.setState({ currentNote: note });
   }
 
   handleNoteTextChange(text) {
     const note = this.noteManager.updateNoteText(
-      this.state.currentNote.name,
+      this.state.currentNote.id,
       text
     );
     this.setState({ currentNote: note });
@@ -63,7 +53,7 @@ class App extends Component {
 
   handleNoteNameChange(name) {
     const note = this.noteManager.updateNoteName(
-      this.state.currentNote.name,
+      this.state.currentNote.id,
       name
     );
     this.setState({ currentNote: note });
@@ -81,8 +71,18 @@ class App extends Component {
 
   render() {
     const files = this.noteManager.notes.map(note => {
-      const isActive = this.state.currentNote.name === note.name;
-      return File(note.name, isActive, this.fileClicked);
+      const isActive = this.state.currentNote.id === note.id;
+      return (
+        <li
+          className="menu-note-list-item"
+          id={isActive ? "active" : "inactive"}
+          key={note.id}
+          data-id={note.id}
+          onClick={this.fileClicked}
+        >
+          {note.name}
+        </li>
+      );
     });
 
     return (

@@ -1,37 +1,35 @@
 import Note from "./Note";
+import uuidv1 from "uuid/v1";
 
 class NoteManager {
   constructor() {
     this.notes = [];
 
     for (let i = 0; i < localStorage.length; i++) {
-      const noteName = localStorage.key(i);
-      const note = Note.parse(localStorage.getItem(noteName));
+      const noteID = localStorage.key(i);
+      const note = Note.parse(localStorage.getItem(noteID));
       this.insertNote(note);
     }
   }
 
   addNewNote() {
-    // TODO: what if note named 'new note' already exists?
-    const note = new Note("new note");
+    const id = uuidv1();
+    const note = new Note(id, "new note");
     this.insertNote(note);
     return note;
   }
 
-  findNote(noteName) {
-    const note = this.notes.find(note => note.name === noteName);
-    if (note === null) {
-      throw Error("Note not found");
-    }
-    return note;
+  findNote(noteID) {
+    const note = this.notes.find(note => note.id === noteID);
+    return note ? note : null; // null signifies error
   }
 
   addToLocalStorage(note) {
-    localStorage.setItem(note.name, note.serialise());
+    localStorage.setItem(note.id, note.serialise());
   }
 
   removeFromLocalStorage(note) {
-    localStorage.removeItem(note.name);
+    localStorage.removeItem(note.id);
   }
 
   insertNote(note) {
@@ -40,12 +38,12 @@ class NoteManager {
   }
 
   deleteNote(note) {
-    this.notes = this.notes.filter(item => item !== note);
+    this.notes = this.notes.filter(item => item.id !== note.id);
     this.removeFromLocalStorage(note);
   }
 
   replaceNote(oldNote, newNote) {
-    const idx = this.notes.findIndex(note => note === oldNote);
+    const idx = this.notes.findIndex(note => note.id === oldNote.id);
     if (idx === -1) {
       throw Error("Note not found");
     }
@@ -57,20 +55,24 @@ class NoteManager {
   }
 
   getNewestNote() {
-    // @TODO
-    return this.notes[0];
+    if (this.notes.length === 0) return null;
+    return this.notes.sort((a, b) => {
+      return a.lastEdit - b.lastEdit;
+    })[0];
   }
 
-  updateNoteText(noteName, newText) {
-    const note = this.findNote(noteName);
-    const newNote = note.updateText(newText);
+  updateNoteText(noteID, newText, editTime = new Date()) {
+    const note = this.findNote(noteID);
+    if (!note) return null;
+    const newNote = note.updateText(newText, editTime);
     this.replaceNote(note, newNote);
     return newNote;
   }
 
-  updateNoteName(noteName, newName) {
-    const note = this.findNote(noteName);
-    const newNote = note.updateName(newName);
+  updateNoteName(noteID, newName, editTime = new Date()) {
+    const note = this.findNote(noteID);
+    if (!note) return null;
+    const newNote = note.updateName(newName, editTime);
     this.replaceNote(note, newNote);
     return newNote;
   }

@@ -114,11 +114,28 @@ describe("With pre-exising notes", () => {
       newTime
     );
 
-    let manuallyCraftedNote = initialNotes[1];
-    manuallyCraftedNote.name = newName;
-    manuallyCraftedNote.lastEdit = newTime;
+    const manuallyCraftedNote = new Note(
+      initialNotes[1].id,
+      newName,
+      initialNotes[1].text,
+      newTime
+    );
     checkNotes(manager.notes, [initialNotes[0], manuallyCraftedNote]);
     expect(updatedNote).toEqual(manuallyCraftedNote);
+  });
+
+  test("Update name of non-existent note", () => {
+    const manager = new NoteManager();
+    const newName = "new name";
+    const newTime = new Date();
+    const updatedNote = manager.updateNoteName(
+      "no-such-note",
+      newName,
+      newTime
+    );
+
+    checkNotes(manager.notes, initialNotes);
+    expect(updatedNote).toBeNull();
   });
 
   test("Update note body", () => {
@@ -131,10 +148,27 @@ describe("With pre-exising notes", () => {
       newTime
     );
 
-    let manuallyCraftedNote = initialNotes[1];
-    manuallyCraftedNote.text = newBody;
-    manuallyCraftedNote.lastEdit = newTime;
+    const manuallyCraftedNote = new Note(
+      initialNotes[1].id,
+      initialNotes[1].name,
+      newBody,
+      newTime
+    );
     checkNotes(manager.notes, [initialNotes[0], manuallyCraftedNote]);
     expect(updatedNote).toEqual(manuallyCraftedNote);
+  });
+
+  test("Update body of non-existent note", () => {
+    const manager = new NoteManager();
+    const newBody = "new body";
+    const newTime = new Date();
+    const updatedNote = manager.updateNoteText(
+      "no-such-note",
+      newBody,
+      newTime
+    );
+
+    checkNotes(manager.notes, initialNotes);
+    expect(updatedNote).toBeNull();
   });
 });

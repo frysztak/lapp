@@ -88,17 +88,28 @@ class App extends Component {
     return (
       <div>
         <nav id="menu">
-          <header className="menu-header">
-            <span className="is-size-2">
-              <span>Lapp</span>
+          <div className="menu-header has-text-centered is-size-2">Lapp</div>
+          <div className="menu-divider is-divider" />
+
+          <div className="columns is-size-3">
+            <div className="column icon-container has-text-centered">
               <i
-                style={{ paddingLeft: 5 }}
                 onClick={this.addNewNote}
-                className="fas fa-plus-square"
-                id="plusIcon"
+                className="fas fa-plus-square has-hover-shadow"
               />
-            </span>
-          </header>
+            </div>
+
+            <div className="column icon-container has-text-centered">
+              <i className="fas fa-search has-hover-shadow" />
+            </div>
+
+            <div className="column icon-container has-text-centered">
+              <i className="fas fa-sort has-hover-shadow" />
+            </div>
+          </div>
+
+          <div className="menu-divider is-divider" />
+
           <ul className="menu-note-list">{files}</ul>
         </nav>
 

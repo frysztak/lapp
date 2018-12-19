@@ -13,7 +13,16 @@ $lighter-text-color: #888995;
 $red: #aa4465;
 
 $body-background-color: $light-background-color;
+$divider-background-color: $lighter-text-color;
 
 // Import the rest of Bulma:
 @import "bulma/bulma.sass";
 @import "bulma-checkradio/src/sass/index.sass";
+@import "bulma-divider/src/sass/index.sass";
+
+// see https://github.com/jgthms/bulma/issues/766
+.columns {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  margin-top: 0 !important;
+}

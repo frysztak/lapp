@@ -1,8 +1,4 @@
-.menu-header {
-  text-align: center;
-}
-
-i#plusIcon:hover {
+i.has-hover-shadow:hover {
   filter: drop-shadow(0 0 5px darken($slideout-menu-text, 20%));
 }
 
@@ -21,4 +17,12 @@ i#plusIcon:hover {
 
 #inactive.menu-note-list-item {
   color: lighten($color: $light-text-color, $amount: 30%);
+}
+
+.menu-divider.is-divider {
+  margin: 0.5rem 2rem !important;
+}
+
+.icon-container {
+  padding: 0 !important;
 }

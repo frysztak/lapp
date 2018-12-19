@@ -4,6 +4,7 @@ import Slideout from "slideout";
 import NoteEditor from "./NoteEditor";
 import NoteManager from "./NoteManager";
 import ReactModal from "react-modal";
+import NoteList from "./NoteList";
 
 ReactModal.setAppElement("#root");
 
@@ -11,7 +12,7 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    this.fileClicked = this.fileClicked.bind(this);
+    this.handleNoteClicked = this.handleNoteClicked.bind(this);
     this.handleNoteTextChange = this.handleNoteTextChange.bind(this);
     this.handleNoteNameChange = this.handleNoteNameChange.bind(this);
     this.addNewNote = this.addNewNote.bind(this);
@@ -37,8 +38,7 @@ class App extends Component {
     this.slideout.open();
   }
 
-  fileClicked(e) {
-    const noteID = e.target.dataset.id;
+  handleNoteClicked(noteID) {
     const note = this.noteManager.findNote(noteID);
     this.setState({ currentNote: note });
   }
@@ -110,7 +110,13 @@ class App extends Component {
 
           <div className="menu-divider is-divider" />
 
-          <ul className="menu-note-list">{files}</ul>
+          <NoteList
+            currentNote={this.state.currentNote}
+            notes={this.noteManager.notes}
+            onNoteClicked={this.handleNoteClicked}
+            sortOrder=""
+            filter=""
+          />
         </nav>
 
         <main id="panel">

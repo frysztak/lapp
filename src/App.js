@@ -97,6 +97,32 @@ class App extends Component {
   }
 
   render() {
+    const sortListItem = sortType => {
+      return (
+        <button
+          key={sortType.id}
+          className={
+            sortType === this.state.sortOrder
+              ? "button is-white dropdown-item is-active"
+              : "button is-white dropdown-item"
+          }
+          onClick={() => this.onSortOrderClicked(sortType)}
+        >
+          <span>
+            {sortType.parameter}
+            <i
+              className={
+                sortType.modifier === "asc"
+                  ? "fas fa-arrow-up"
+                  : "fas fa-arrow-down"
+              }
+              style={{ marginLeft: "5px" }}
+            />
+          </span>
+        </button>
+      );
+    };
+
     return (
       <div
         onClick={() => {
@@ -141,25 +167,7 @@ class App extends Component {
                 <div className="dropdown-menu" id="dropdown-menu" role="menu">
                   <div className="dropdown-content">
                     {this.sortTypes.map(sortType => {
-                      return (
-                        <button
-                          key={sortType.id}
-                          className="button is-white dropdown-item"
-                          onClick={() => this.onSortOrderClicked(sortType)}
-                        >
-                          <span>
-                            {sortType.parameter}
-                            <i
-                              className={
-                                sortType.modifier === "asc"
-                                  ? "fas fa-arrow-up"
-                                  : "fas fa-arrow-down"
-                              }
-                              style={{ marginLeft: "5px" }}
-                            />
-                          </span>
-                        </button>
-                      );
+                      return sortListItem(sortType);
                     })}
                   </div>
                 </div>

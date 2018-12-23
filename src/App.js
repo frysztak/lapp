@@ -8,6 +8,14 @@ import NoteList from "./NoteList";
 
 ReactModal.setAppElement("#root");
 
+class SortType {
+  constructor(id, parameter, modifier) {
+    this.id = id;
+    this.parameter = parameter;
+    this.modifier = modifier;
+  }
+}
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -17,14 +25,25 @@ class App extends Component {
     this.handleNoteNameChange = this.handleNoteNameChange.bind(this);
     this.addNewNote = this.addNewNote.bind(this);
     this.deleteNote = this.deleteNote.bind(this);
+    this.onSortNotesClicked = this.onSortNotesClicked.bind(this);
+    this.onSortOrderClicked = this.onSortOrderClicked.bind(this);
 
     this.noteManager = new NoteManager();
     if (this.noteManager.notes.length === 0) {
       this.noteManager.addNewNote();
     }
 
+    this.sortTypes = [
+      new SortType(0, "Name", "asc"),
+      new SortType(1, "Name", "desc"),
+      new SortType(2, "Last edited", "asc"),
+      new SortType(3, "Last edited", "desc")
+    ];
+
     this.state = {
-      currentNote: this.noteManager.getNewestNote()
+      currentNote: this.noteManager.getNewestNote(),
+      showSortPopup: false,
+      sortOrder: this.sortTypes[0]
     };
   }
 
@@ -69,24 +88,21 @@ class App extends Component {
     this.setState({ currentNote: this.noteManager.getNewestNote() });
   }
 
-  render() {
-    const files = this.noteManager.notes.map(note => {
-      const isActive = this.state.currentNote.id === note.id;
-      return (
-        <li
-          className="menu-note-list-item"
-          id={isActive ? "active" : "inactive"}
-          key={note.id}
-          data-id={note.id}
-          onClick={this.fileClicked}
-        >
-          {note.name}
-        </li>
-      );
-    });
+  onSortNotesClicked(e) {
+    this.setState({ showSortPopup: !this.state.showSortPopup });
+  }
 
+  onSortOrderClicked(order) {
+    this.setState({ sortOrder: order });
+  }
+
+  render() {
     return (
-      <div>
+      <div
+        onClick={() => {
+          if (this.state.showSortPopup) this.setState({ showSortPopup: false });
+        }}
+      >
         <nav id="menu">
           <div className="menu-header has-text-centered is-size-2">Lapp</div>
           <div className="menu-divider is-divider" />
@@ -95,16 +111,59 @@ class App extends Component {
             <div className="column icon-container has-text-centered">
               <i
                 onClick={this.addNewNote}
-                className="fas fa-plus-square has-hover-shadow"
+                className="fas fa-plus-square has-hover-shadow clickable"
               />
             </div>
 
             <div className="column icon-container has-text-centered">
-              <i className="fas fa-search has-hover-shadow" />
+              <i className="fas fa-search has-hover-shadow clickable" />
             </div>
 
             <div className="column icon-container has-text-centered">
-              <i className="fas fa-sort has-hover-shadow" />
+              <div
+                className={
+                  this.state.showSortPopup
+                    ? "dropdown is-active is-right"
+                    : "dropdown is-right"
+                }
+              >
+                <div
+                  className="dropdown-trigger"
+                  aria-haspopup="true"
+                  aria-controls="dropdown-menu"
+                >
+                  <i
+                    className="fas fa-sort has-hover-shadow clickable"
+                    onClick={this.onSortNotesClicked}
+                  />
+                </div>
+
+                <div className="dropdown-menu" id="dropdown-menu" role="menu">
+                  <div className="dropdown-content">
+                    {this.sortTypes.map(sortType => {
+                      return (
+                        <button
+                          key={sortType.id}
+                          className="button is-white dropdown-item"
+                          onClick={() => this.onSortOrderClicked(sortType)}
+                        >
+                          <span>
+                            {sortType.parameter}
+                            <i
+                              className={
+                                sortType.modifier === "asc"
+                                  ? "fas fa-arrow-up"
+                                  : "fas fa-arrow-down"
+                              }
+                              style={{ marginLeft: "5px" }}
+                            />
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -114,7 +173,7 @@ class App extends Component {
             currentNote={this.state.currentNote}
             notes={this.noteManager.notes}
             onNoteClicked={this.handleNoteClicked}
-            sortOrder=""
+            sortOrder={this.state.sortOrder}
             filter=""
           />
         </nav>

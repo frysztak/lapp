@@ -9,18 +9,18 @@ class NoteList extends Component {
 
   processNotes() {
     let notes = this.props.notes;
-    const shouldSort = this.props.sortOrder !== "";
     const shouldFilter = this.props.filter !== "";
-    if (!shouldSort && !shouldFilter) return notes;
 
-    if (shouldSort) {
-      if (this.props.sortOrder === "name") {
-        return notes.sort((a, b) => a.name - b.name);
-      } else if (this.props.sortOrder === "lastEdit") {
-        return notes.sort((a, b) => a.lastEdit - b.lastEdit);
-      } else {
-        throw `Unknown sortOrder '${this.props.sortOrder}'`;
-      }
+    if (this.props.sortOrder.parameter === "Name") {
+      const comparisonFunc =
+        this.props.sortOrder.modifier === "asc"
+          ? (a, b) => a.name.localeCompare(b.name)
+          : (a, b) => b.name.localeCompare(a.name);
+      return notes.sort(comparisonFunc);
+    } else if (this.props.sortOrder === "lastEdit") {
+      return notes.sort((a, b) => a.lastEdit - b.lastEdit);
+    } else {
+      throw `Unknown sortOrder '${this.props.sortOrder}'`;
     }
   }
 

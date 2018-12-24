@@ -16,11 +16,17 @@ class NoteList extends Component {
         this.props.sortOrder.modifier === "asc"
           ? (a, b) => a.name.localeCompare(b.name)
           : (a, b) => b.name.localeCompare(a.name);
+
       return notes.sort(comparisonFunc);
-    } else if (this.props.sortOrder === "lastEdit") {
-      return notes.sort((a, b) => a.lastEdit - b.lastEdit);
+    } else if (this.props.sortOrder.parameter === "Last edited") {
+      const comparisonFunc =
+        this.props.sortOrder.modifier === "asc"
+          ? (a, b) => a.lastEdit - b.lastEdit
+          : (a, b) => b.lastEdit - a.lastEdit;
+
+      return notes.sort(comparisonFunc);
     } else {
-      throw `Unknown sortOrder '${this.props.sortOrder}'`;
+      throw Error(`Unknown sortOrder '${this.props.sortOrder}'`);
     }
   }
 

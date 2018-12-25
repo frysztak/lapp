@@ -127,6 +127,28 @@ class App extends Component {
       );
     };
 
+    const Popup = ({ showPopup, child, menu }) => {
+      return (
+        <div
+          className={
+            showPopup ? "dropdown is-active is-right" : "dropdown is-right"
+          }
+        >
+          <div
+            className="dropdown-trigger"
+            aria-haspopup="true"
+            aria-controls="dropdown-menu"
+          >
+            {child}
+          </div>
+
+          <div className="dropdown-menu" id="dropdown-menu" role="menu">
+            <div className="dropdown-content">{menu}</div>
+          </div>
+        </div>
+      );
+    };
+
     return (
       <div
         onClick={() => {
@@ -150,32 +172,18 @@ class App extends Component {
             </div>
 
             <div className="column icon-container has-text-centered">
-              <div
-                className={
-                  this.state.showSortPopup
-                    ? "dropdown is-active is-right"
-                    : "dropdown is-right"
-                }
-              >
-                <div
-                  className="dropdown-trigger"
-                  aria-haspopup="true"
-                  aria-controls="dropdown-menu"
-                >
+              <Popup
+                showPopup={this.state.showSortPopup}
+                child={
                   <i
                     className="fas fa-sort has-hover-shadow clickable"
                     onClick={this.onSortNotesClicked}
                   />
-                </div>
-
-                <div className="dropdown-menu" id="dropdown-menu" role="menu">
-                  <div className="dropdown-content">
-                    {this.sortTypes.map(sortType => {
-                      return sortListItem(sortType);
-                    })}
-                  </div>
-                </div>
-              </div>
+                }
+                menu={this.sortTypes.map(sortType => {
+                  return sortListItem(sortType);
+                })}
+              />
             </div>
           </div>
 

@@ -11,6 +11,9 @@ class NoteEditor extends React.Component {
     this.onNoteTextChanged = this.onNoteTextChanged.bind(this);
     this.deleteNote = this.deleteNote.bind(this);
 
+    this.nameEditorRef = React.createRef();
+    this.bodyEditorRef = React.createRef();
+
     this.state = {
       showDeletionModal: false
     };
@@ -34,11 +37,17 @@ class NoteEditor extends React.Component {
     this.setState({ showDeletionModal: false });
   }
 
+  overwriteNote(newNote) {
+    this.nameEditorRef.current.overwriteText(newNote.name);
+    this.bodyEditorRef.current.overwriteText(newNote.text);
+  }
+
   render() {
     const currentNote = this.props.currentNote;
     return (
       <div>
         <ClickToEdit
+          ref={this.nameEditorRef}
           text={currentNote.name}
           id="note-name"
           plainText={true}
@@ -46,6 +55,7 @@ class NoteEditor extends React.Component {
           onTextChange={this.onNoteNameChanged}
         />
         <ClickToEdit
+          ref={this.bodyEditorRef}
           text={currentNote.text}
           id="note-body"
           plainText={false}

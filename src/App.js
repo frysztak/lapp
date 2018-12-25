@@ -22,6 +22,8 @@ class App extends Component {
       this.noteManager.addNewNote();
     }
 
+    this.noteEditorRef = React.createRef();
+
     this.state = {
       currentNote: this.noteManager.getNewestNote()
     };
@@ -41,6 +43,8 @@ class App extends Component {
     const noteID = e.target.dataset.id;
     const note = this.noteManager.findNote(noteID);
     this.setState({ currentNote: note });
+
+    this.noteEditorRef.current.overwriteNote(note);
   }
 
   handleNoteTextChange(text) {
@@ -105,6 +109,7 @@ class App extends Component {
         <main id="panel">
           <div>
             <NoteEditor
+              ref={this.noteEditorRef}
               currentNote={this.state.currentNote}
               onNoteNameChanged={this.handleNoteNameChange}
               onNoteTextChanged={this.handleNoteTextChange}

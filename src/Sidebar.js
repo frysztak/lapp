@@ -41,8 +41,8 @@ const SortListItem = props => {
       key={sortType.id}
       className={
         sortType === props.currentSortOrder
-          ? "button is-white dropdown-item is-active"
-          : "button is-white dropdown-item"
+          ? "button is-white dropdown-item is-size-6 is-active"
+          : "button is-white dropdown-item is-size-6"
       }
       onClick={() => props.onSortOrderClicked(sortType)}
     >

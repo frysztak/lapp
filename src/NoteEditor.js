@@ -59,6 +59,8 @@ class NoteEditor extends React.Component {
               ref={this.nameEditorRef}
               text={currentNote.name}
               id="note-name"
+              tabIndex={1}
+              disableTab={true}
               plainText={true}
               disableToolbar={true}
               onTextChange={this.onNoteNameChanged}
@@ -70,6 +72,7 @@ class NoteEditor extends React.Component {
           ref={this.bodyEditorRef}
           text={currentNote.text}
           id="note-body"
+          tabIndex={2}
           plainText={false}
           onTextChange={this.onNoteTextChanged}
           onDeleteNoteClicked={() => this.setState({ showDeletionModal: true })}

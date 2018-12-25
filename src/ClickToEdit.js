@@ -31,15 +31,18 @@ class ClickToEdit extends React.Component {
 
     this.quillRef = React.createRef();
 
+    const keyboard = props.disableTab ? { bindings: { tab: false } } : {};
+
     this.modules = props.disableToolbar
-      ? { toolbar: null }
+      ? { toolbar: null, keyboard: keyboard }
       : {
           toolbar: {
             container: "#toolbar",
             handlers: {
               deleteNote: () => this.props.onDeleteNoteClicked()
             }
-          }
+          },
+          keyboard: keyboard
         };
 
     this.formats = props.plainText
@@ -100,6 +103,7 @@ class ClickToEdit extends React.Component {
           modules={this.modules}
           formats={this.formats}
           id={this.props.id}
+          tabIndex={this.props.tabIndex}
           theme={this.props.plainText ? null : "snow"}
           onChange={this.handleTextChange}
           onKeyDown={this.onEditorKeyDown}
@@ -111,7 +115,8 @@ class ClickToEdit extends React.Component {
 
 ClickToEdit.defaultProps = {
   plainText: false,
-  disableToolbar: false
+  disableToolbar: false,
+  disableTab: false
 };
 
 export default ClickToEdit;

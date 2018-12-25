@@ -1,0 +1,11 @@
+patch-package
+--- a/node_modules/react-quill/lib/component.js
++++ b/node_modules/react-quill/lib/component.js
+@@ -336,7 +336,6 @@ var QuillComponent = createClass({
+ 
+ 		var properties = {
+ 			key: this.state.generation,
+-			tabIndex: this.props.tabIndex,
+ 			ref: function(element) { self.editingArea = element },
+ 		};
+ 

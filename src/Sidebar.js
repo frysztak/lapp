@@ -67,7 +67,7 @@ const Sidebar = props => {
       <div className="menu-header has-text-centered is-size-2">Lapp</div>
       <div className="menu-divider is-divider" />
 
-      <div className="columns is-size-3">
+      <div className="columns is-mobile is-size-3">
         <div className="column icon-container has-text-centered">
           <i
             onClick={props.addNewNote}

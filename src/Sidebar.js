@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import NoteList from "./NoteList";
 
 const Popup = ({ showPopup, child, menu, centerPopup, equalPadding }) => {
@@ -112,7 +112,7 @@ const Sidebar = props => {
             child={
               <i
                 className="fas fa-sort has-hover-shadow clickable"
-                onClick={_ => props.onSortNotesClicked()}
+                onClick={props.onSortNotesClicked}
               />
             }
             menu={props.sortTypes.map(sortType => (

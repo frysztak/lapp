@@ -46,14 +46,26 @@ class NoteEditor extends React.Component {
     const currentNote = this.props.currentNote;
     return (
       <div>
-        <ClickToEdit
-          ref={this.nameEditorRef}
-          text={currentNote.name}
-          id="note-name"
-          plainText={true}
-          disableToolbar={true}
-          onTextChange={this.onNoteNameChanged}
-        />
+        <div className="columns is-mobile is-gapless is-marginless is-centered is-vcentered">
+          <div className="column is-narrow is-size-4 slideout-trigger is-hidden-desktop">
+            <i
+              onClick={this.props.onOpenSidebar}
+              className="fas fa-ellipsis-v has-hover-shadow clickable"
+            />
+          </div>
+
+          <div className="column">
+            <ClickToEdit
+              ref={this.nameEditorRef}
+              text={currentNote.name}
+              id="note-name"
+              plainText={true}
+              disableToolbar={true}
+              onTextChange={this.onNoteNameChanged}
+            />
+          </div>
+        </div>
+
         <ClickToEdit
           ref={this.bodyEditorRef}
           text={currentNote.text}

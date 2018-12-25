@@ -152,6 +152,7 @@ class App extends Component {
               onNoteNameChanged={this.handleNoteNameChange}
               onNoteTextChanged={this.handleNoteTextChange}
               onDeleteNote={this.deleteNote}
+              onOpenSidebar={() => this.slideout.open()}
             />
           </div>
         </main>

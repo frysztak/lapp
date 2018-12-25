@@ -41,3 +41,7 @@ $slideout-panel-background: $light-background-color;
 .slideout-open .slideout-menu {
   display: block;
 }
+
+.columns.is-gapless > .slideout-trigger.column {
+  padding-left: 10px !important;
+}

@@ -192,7 +192,7 @@ class App extends Component {
             <div className="column icon-container has-text-centered">
               <i
                 onClick={this.addNewNote}
-                className="fas fa-plus-square has-hover-shadow clickable"
+                className="fas fa-plus-circle has-hover-shadow clickable"
               />
             </div>
 

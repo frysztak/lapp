@@ -10,6 +10,9 @@ class NoteList extends Component {
   processNotes() {
     let notes = this.props.notes;
     const shouldFilter = this.props.filter !== "";
+    if (shouldFilter) {
+      notes = notes.filter(a => a.name.startsWith(this.props.filter));
+    }
 
     if (this.props.sortOrder.parameter === "Name") {
       const comparisonFunc =

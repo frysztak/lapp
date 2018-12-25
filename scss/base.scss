@@ -26,3 +26,11 @@ $divider-background-color: $lighter-text-color;
   margin-right: 0 !important;
   margin-top: 0 !important;
 }
+
+.dropdown-menu.is-center {
+  left: -250% !important;
+}
+
+.dropdown-content.equal-padding {
+  padding: 0.5rem;
+}

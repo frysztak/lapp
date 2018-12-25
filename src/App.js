@@ -27,6 +27,8 @@ class App extends Component {
     this.deleteNote = this.deleteNote.bind(this);
     this.onSortNotesClicked = this.onSortNotesClicked.bind(this);
     this.onSortOrderClicked = this.onSortOrderClicked.bind(this);
+    this.onFilterNotesClicked = this.onFilterNotesClicked.bind(this);
+    this.onFilterChanged = this.onFilterChanged.bind(this);
 
     this.noteManager = new NoteManager();
     if (this.noteManager.notes.length === 0) {
@@ -45,7 +47,9 @@ class App extends Component {
     this.state = {
       currentNote: this.noteManager.getNewestNote(),
       showSortPopup: false,
-      sortOrder: this.sortTypes[0]
+      sortOrder: this.sortTypes[0],
+      showFilterPopup: false,
+      filter: ""
     };
   }
 
@@ -100,6 +104,15 @@ class App extends Component {
     this.setState({ sortOrder: order });
   }
 
+  onFilterNotesClicked() {
+    this.setState({ showFilterPopup: !this.state.showFilterPopup });
+  }
+
+  onFilterChanged(e) {
+    const filter = e.target.value;
+    this.setState({ filter: filter });
+  }
+
   render() {
     const sortListItem = sortType => {
       return (
@@ -127,13 +140,13 @@ class App extends Component {
       );
     };
 
-    const Popup = ({ showPopup, child, menu }) => {
+    const Popup = ({ showPopup, child, menu, centerPopup, equalPadding }) => {
+      let mainDivClass = "dropdown ";
+      if (showPopup) mainDivClass += "is-active ";
+      if (!centerPopup) mainDivClass += "is-right";
+
       return (
-        <div
-          className={
-            showPopup ? "dropdown is-active is-right" : "dropdown is-right"
-          }
-        >
+        <div className={mainDivClass}>
           <div
             className="dropdown-trigger"
             aria-haspopup="true"
@@ -142,8 +155,22 @@ class App extends Component {
             {child}
           </div>
 
-          <div className="dropdown-menu" id="dropdown-menu" role="menu">
-            <div className="dropdown-content">{menu}</div>
+          <div
+            className={
+              centerPopup ? "dropdown-menu is-center" : "dropdown-menu"
+            }
+            id="dropdown-menu"
+            role="menu"
+          >
+            <div
+              className={
+                equalPadding
+                  ? "dropdown-content equal-padding"
+                  : "dropdown-content"
+              }
+            >
+              {menu}
+            </div>
           </div>
         </div>
       );
@@ -153,6 +180,8 @@ class App extends Component {
       <div
         onClick={() => {
           if (this.state.showSortPopup) this.setState({ showSortPopup: false });
+          if (this.state.showFilterPopup)
+            this.setState({ showFilterPopup: false });
         }}
       >
         <nav id="menu">
@@ -168,7 +197,34 @@ class App extends Component {
             </div>
 
             <div className="column icon-container has-text-centered">
-              <i className="fas fa-search has-hover-shadow clickable" />
+              <Popup
+                showPopup={this.state.showFilterPopup}
+                centerPopup={true}
+                equalPadding={true}
+                child={
+                  <i
+                    className="fas fa-search has-hover-shadow clickable"
+                    onClick={this.onFilterNotesClicked}
+                  />
+                }
+                menu={
+                  <div className="field" onClick={e => e.stopPropagation()}>
+                    <p className="control has-icons-left">
+                      <input
+                        className="input is-medium"
+                        type="text"
+                        placeholder="Note name..."
+                        autoFocus={true}
+                        value={this.state.filter}
+                        onChange={this.onFilterChanged}
+                      />
+                      <span className="icon is-small is-left">
+                        <i className="fas fa-search" />
+                      </span>
+                    </p>
+                  </div>
+                }
+              />
             </div>
 
             <div className="column icon-container has-text-centered">
@@ -194,7 +250,7 @@ class App extends Component {
             notes={this.noteManager.notes}
             onNoteClicked={this.handleNoteClicked}
             sortOrder={this.state.sortOrder}
-            filter=""
+            filter={this.state.filter}
           />
         </nav>
 

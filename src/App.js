@@ -40,6 +40,8 @@ class App extends Component {
       new SortType(3, "Last edited", "desc")
     ];
 
+    this.noteEditorRef = React.createRef();
+
     this.state = {
       currentNote: this.noteManager.getNewestNote(),
       showSortPopup: false,
@@ -60,6 +62,8 @@ class App extends Component {
   handleNoteClicked(noteID) {
     const note = this.noteManager.findNote(noteID);
     this.setState({ currentNote: note });
+
+    this.noteEditorRef.current.overwriteNote(note);
   }
 
   handleNoteTextChange(text) {
@@ -189,6 +193,7 @@ class App extends Component {
         <main id="panel">
           <div>
             <NoteEditor
+              ref={this.noteEditorRef}
               currentNote={this.state.currentNote}
               onNoteNameChanged={this.handleNoteNameChange}
               onNoteTextChanged={this.handleNoteTextChange}

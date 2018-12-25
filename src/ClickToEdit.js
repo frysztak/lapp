@@ -67,6 +67,7 @@ class ClickToEdit extends React.Component {
   }
 
   handleTextChange(content, delta, source, editor) {
+    if (source === "api") return;
     const fullDelta = editor.getContents();
     if (this.props.plainText) {
       this.props.onTextChange(toPlaintext(fullDelta));
@@ -82,16 +83,9 @@ class ClickToEdit extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if (this.props.text !== prevProps.text) {
-      const delta = this.props.plainText
-        ? this.textToDelta(this.props.text)
-        : this.props.text;
-
-      const contents = this.quillRef.current.getEditor().getContents();
-      const updateDelta = contents.diff(delta);
-      this.quillRef.current.getEditor().updateContents(updateDelta);
-    }
+  overwriteText(newText) {
+    const delta = this.props.plainText ? this.textToDelta(newText) : newText;
+    this.quillRef.current.getEditor().setContents(delta);
   }
 
   render() {

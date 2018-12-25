@@ -89,11 +89,15 @@ class App extends Component {
   addNewNote() {
     const note = this.noteManager.addNewNote();
     this.setState({ currentNote: note });
+    this.noteEditorRef.current.overwriteNote(note);
   }
 
   deleteNote(note) {
     this.noteManager.deleteNote(note);
-    this.setState({ currentNote: this.noteManager.getNewestNote() });
+    const newestNote = this.noteManager.getNewestNote();
+    this.setState({ currentNote: newestNote });
+
+    this.noteEditorRef.current.overwriteNote(newestNote);
   }
 
   onSortNotesClicked() {

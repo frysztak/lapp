@@ -6,6 +6,8 @@
     "bulma": "^0.7.2",
     "bulma-checkradio": "^2.1.0",
     "bulma-divider": "^2.0.1",
+    "dropbox": "^4.0.14",
+    "js-cookie": "^2.2.0",
     "node-sass-chokidar": "^1.3.4",
     "quill-delta-to-plaintext": "^1.0.0",
     "react": "^16.6.1",

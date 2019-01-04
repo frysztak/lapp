@@ -1,5 +1,6 @@
 import Note from "./Note";
 import uuidv1 from "uuid/v1";
+import { Dropbox } from "dropbox";
 
 class NoteManager {
   constructor() {
@@ -10,6 +11,8 @@ class NoteManager {
       const note = Note.parse(localStorage.getItem(noteID));
       this.insertNote(note);
     }
+
+    this.dropbox = new Dropbox({ fetch: window.fetch });
   }
 
   addNewNote() {

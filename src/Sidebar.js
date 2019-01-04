@@ -1,5 +1,6 @@
 import React from "react";
 import NoteList from "./NoteList";
+import { env as Env } from "./Env";
 
 const Popup = ({ showPopup, child, menu, centerPopup, equalPadding }) => {
   let mainDivClass = "dropdown ";
@@ -136,6 +137,21 @@ const Sidebar = props => {
         sortOrder={props.sortOrder}
         filter={props.filter}
       />
+
+      {props.hasDropboxIntegration ? null : (
+        <div className="has-text-centered">
+          <div className="menu-divider is-divider" />
+          <button
+            className="button"
+            onClick={() => (window.location.href = Env.DropboxAuthorizeUrl)}
+          >
+            <span>Sign in with Dropbox</span>
+            <span className="icon">
+              <i className="fab fa-dropbox" />
+            </span>
+          </button>
+        </div>
+      )}
     </div>
   );
 };

@@ -5,6 +5,8 @@ import NoteEditor from "./NoteEditor";
 import NoteManager from "./NoteManager";
 import ReactModal from "react-modal";
 import Sidebar from "./Sidebar";
+import Cookies from "js-cookie";
+import { env as Env } from "./Env";
 
 ReactModal.setAppElement("#root");
 
@@ -49,11 +51,16 @@ class App extends Component {
       showSortPopup: false,
       sortOrder: this.sortTypes[0],
       showFilterPopup: false,
-      filter: ""
+      filter: "",
+      dropboxIntegrationEnabled: this.isDropboxIntegrationEnabled()
     };
   }
 
-  componentDidMount() {
+  isDropboxIntegrationEnabled() {
+    return Cookies.get("dbxAccessToken") || false;
+  }
+
+  async componentDidMount() {
     this.slideout = new Slideout({
       panel: document.getElementById("panel"),
       menu: document.getElementById("menu"),
@@ -61,6 +68,33 @@ class App extends Component {
       tolerance: 70
     });
     this.slideout.open();
+
+    const currentURL = new URL(window.location.href);
+    if (currentURL.pathname === `/${Env.DropboxRedirectPath}`) {
+      if (currentURL.searchParams.has("code")) {
+        const authorizationCode = currentURL.searchParams.get("code");
+
+        // hide authorization code in url
+        if (window.history.pushState) {
+          window.history.pushState({}, null, window.location.origin);
+        }
+
+        const accessTokenUrl = `${
+          Env.DropboxAccessTokenUrl
+        }${authorizationCode}`;
+
+        const response = await fetch(accessTokenUrl, Env.FetchOptions);
+
+        if (response.status !== 200) {
+          console.log(`Status code: ${response.status}`);
+          return;
+        }
+
+        this.setState({
+          dropboxIntegrationEnabled: this.isDropboxIntegrationEnabled()
+        });
+      }
+    }
   }
 
   handleNoteClicked(noteID) {
@@ -141,6 +175,7 @@ class App extends Component {
             onFilterNotesClicked={this.onFilterNotesClicked}
             onFilterChanged={this.onFilterChanged}
             onNoteClicked={this.handleNoteClicked}
+            hasDropboxIntegration={this.state.dropboxIntegrationEnabled}
           />
         </nav>
 

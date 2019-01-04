@@ -19,6 +19,7 @@ class Env {
       this.DropboxClientID
     }&response_type=code&redirect_uri=${this.DropboxRedirectUrl}`;
     this.DropboxAccessTokenUrl = `http://localhost:3333/accessToken?authorizationCode=`;
+    this.DropboxAccessTokenCookieName = "dbxAccessToken";
   }
 }
 

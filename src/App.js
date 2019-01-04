@@ -54,10 +54,16 @@ class App extends Component {
       filter: "",
       dropboxIntegrationEnabled: this.isDropboxIntegrationEnabled()
     };
+
+    if (this.isDropboxIntegrationEnabled()) {
+      this.noteManager.setDropboxAccessToken(
+        Cookies.get(Env.DropboxAccessTokenCookieName)
+      );
+    }
   }
 
   isDropboxIntegrationEnabled() {
-    return Cookies.get("dbxAccessToken") || false;
+    return Cookies.get(Env.DropboxAccessTokenCookieName) || false;
   }
 
   async componentDidMount() {
@@ -89,6 +95,10 @@ class App extends Component {
           console.log(`Status code: ${response.status}`);
           return;
         }
+
+        this.noteManager.setDropboxAccessToken(
+          Cookies.get(Env.DropboxAccessTokenCookieName)
+        );
 
         this.setState({
           dropboxIntegrationEnabled: this.isDropboxIntegrationEnabled()

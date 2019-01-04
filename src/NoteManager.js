@@ -1,6 +1,8 @@
 import Note from "./Note";
 import uuidv1 from "uuid/v1";
 import { Dropbox } from "dropbox";
+import { fromDelta } from "quill-delta-markdown";
+import moment from "moment";
 
 class NoteManager {
   constructor() {
@@ -78,6 +80,81 @@ class NoteManager {
     const newNote = note.updateName(newName, editTime);
     this.replaceNote(note, newNote);
     return newNote;
+  }
+
+  setDropboxAccessToken(accessToken) {
+    this.dropbox.setAccessToken(accessToken);
+    this.beginDropboxSync();
+  }
+
+  convertDateTimeToDropboxFormat(datetime) {
+    return (
+      moment.utc(datetime, moment.ISO_8601).format("YYYY-MM-DDTHH:mm:ss") + "Z"
+    );
+  }
+
+  getLocalFileList() {
+    return this.notes.map(note => {
+      return {
+        name: `${note.name}.md`,
+        last_modified: this.convertDateTimeToDropboxFormat(note.lastEdit),
+        content: fromDelta(note.text.ops)
+      };
+    });
+  }
+
+  async beginDropboxSync() {
+    const dbxFilesResponse = await this.dropbox.filesListFolder({ path: "" });
+    if (dbxFilesResponse.has_more) {
+      throw Error("has_more");
+    }
+
+    const dbxFiles = dbxFilesResponse.entries.filter(file =>
+      file.name.endsWith(".md")
+    );
+    const localFiles = this.getLocalFileList();
+
+    const filesToDownload = dbxFiles.filter(remoteFile => {
+      const localIdx = localFiles.findIndex(
+        localFile => localFile.name === remoteFile.name
+      );
+      if (localIdx === -1) return true;
+
+      if (remoteFile.last_modified > localFiles[localIdx].last_modified)
+        return true;
+
+      return false;
+    });
+
+    const filesToUpload = localFiles.filter(localFile => {
+      const remoteIdx = dbxFiles.findIndex(
+        remoteFile => remoteFile.name === localFile.name
+      );
+      if (remoteIdx === -1) return true;
+
+      if (dbxFiles[remoteIdx].last_modified > localFile.last_modified)
+        return true;
+
+      return false;
+    });
+
+    console.log(dbxFilesResponse);
+    console.log(dbxFiles);
+    console.log(localFiles);
+    console.log(filesToDownload);
+    console.log(filesToUpload);
+
+    await this.uploadFiles(filesToUpload);
+  }
+
+  async uploadFiles(localFiles) {
+    for (const file of localFiles) {
+      await this.dropbox.filesUpload({
+        contents: file.content,
+        path: `/${file.name}`,
+        client_modified: file.last_modified
+      });
+    }
   }
 }
 

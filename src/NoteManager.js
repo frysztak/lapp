@@ -1,15 +1,20 @@
 import Note from "./Note";
 import uuidv1 from "uuid/v1";
+import { addNewNote, setCurrentNoteId } from "./redux/actions";
 
 class NoteManager {
-  constructor() {
+  constructor(store) {
     this.notes = [];
+    this.store = store;
 
     for (let i = 0; i < localStorage.length; i++) {
       const noteID = localStorage.key(i);
       const note = Note.parse(localStorage.getItem(noteID));
       this.insertNote(note);
+      this.store.dispatch(addNewNote(note));
     }
+
+    this.store.dispatch(setCurrentNoteId(this.getNewestNote().id));
   }
 
   addNewNote() {

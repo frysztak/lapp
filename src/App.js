@@ -5,6 +5,7 @@ import NoteEditor from "./components/NoteEditor";
 import NoteManager from "./NoteManager";
 import ReactModal from "react-modal";
 import Sidebar from "./components/Sidebar";
+import store from "./redux/store";
 
 ReactModal.setAppElement("#root");
 
@@ -30,7 +31,7 @@ class App extends Component {
     this.onFilterNotesClicked = this.onFilterNotesClicked.bind(this);
     this.onFilterChanged = this.onFilterChanged.bind(this);
 
-    this.noteManager = new NoteManager();
+    this.noteManager = new NoteManager(store);
     if (this.noteManager.notes.length === 0) {
       this.noteManager.addNewNote();
     }

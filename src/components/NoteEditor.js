@@ -1,6 +1,7 @@
 import React from "react";
 import ClickToEdit from "./ClickToEdit";
 import ReactModal from "react-modal";
+import { connect } from "react-redux";
 
 class NoteEditor extends React.Component {
   constructor(props) {
@@ -42,8 +43,18 @@ class NoteEditor extends React.Component {
     this.bodyEditorRef.current.overwriteText(newNote.text);
   }
 
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (
+      !prevProps.currentNote ||
+      prevProps.currentNote.id !== this.props.currentNote.id
+    ) {
+      this.overwriteNote(this.props.currentNote);
+    }
+  }
+
   render() {
     const currentNote = this.props.currentNote;
+
     return (
       <div>
         <div className="columns is-mobile is-gapless is-marginless is-centered is-vcentered">
@@ -57,7 +68,7 @@ class NoteEditor extends React.Component {
           <div className="column">
             <ClickToEdit
               ref={this.nameEditorRef}
-              text={currentNote.name}
+              text={currentNote ? currentNote.name : ""}
               id="note-name"
               tabIndex={1}
               disableTab={true}
@@ -70,7 +81,7 @@ class NoteEditor extends React.Component {
 
         <ClickToEdit
           ref={this.bodyEditorRef}
-          text={currentNote.text}
+          text={currentNote ? currentNote.text : ""}
           id="note-body"
           tabIndex={2}
           plainText={false}
@@ -140,4 +151,8 @@ class NoteEditor extends React.Component {
   }
 }
 
-export default NoteEditor;
+const mapStateToProps = state => {
+  return { currentNote: state.notes.currentNote };
+};
+
+export default connect(mapStateToProps)(NoteEditor);

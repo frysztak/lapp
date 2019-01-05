@@ -9,6 +9,7 @@ import {
   deleteCurrentNote,
   setNewestNoteAsCurrent
 } from "../redux/actions";
+import Note from "../Note";
 
 class NoteEditor extends React.Component {
   constructor(props) {
@@ -22,12 +23,17 @@ class NoteEditor extends React.Component {
   }
 
   onNoteTextChanged(text) {
-    const updatedNote = this.props.currentNote.updateText(text, new Date());
+    const updatedNote = Note.updateText(
+      this.props.currentNote,
+      text,
+      new Date()
+    );
     this.props.onNoteChanged(updatedNote);
   }
 
   onNoteNameChanged(text) {
-    const updatedNote = this.props.currentNote.updateName(
+    const updatedNote = Note.updateName(
+      this.props.currentNote,
       text.trim(),
       new Date()
     );

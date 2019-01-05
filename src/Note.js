@@ -32,12 +32,12 @@ class Note {
     return JSON.stringify(this);
   }
 
-  updateText(newText, editTime) {
-    return new Note(this.id, this.name, newText, editTime);
+  static updateText(note, newText, editTime) {
+    return new Note(note.id, note.name, newText, editTime);
   }
 
-  updateName(newName, editTime) {
-    return new Note(this.id, newName, this.text, editTime);
+  static updateName(note, newName, editTime) {
+    return new Note(note.id, newName, note.text, editTime);
   }
 }
 

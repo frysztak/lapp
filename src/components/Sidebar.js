@@ -141,13 +141,7 @@ const Sidebar = props => {
 
       <div className="menu-divider is-divider" />
 
-      <NoteList
-        //currentNote={props.currentNote}
-        //notes={props.notes}
-        onNoteClicked={props.onNoteClicked}
-        sortOrder={props.sortOrder}
-        filter={props.filter}
-      />
+      <NoteList />
     </div>
   );
 };

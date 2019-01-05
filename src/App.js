@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import "./App.css";
 import Slideout from "slideout";
-import NoteEditor from "./NoteEditor";
+import NoteEditor from "./components/NoteEditor";
 import NoteManager from "./NoteManager";
 import ReactModal from "react-modal";
-import Sidebar from "./Sidebar";
+import Sidebar from "./components/Sidebar";
 
 ReactModal.setAppElement("#root");
 

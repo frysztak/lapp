@@ -1,7 +1,8 @@
 import React from "react";
 import NoteList from "./NoteList";
 import { connect } from "react-redux";
-import { setCurrentNoteId } from "../redux/actions";
+import { addNewNote, setCurrentNoteId } from "../redux/actions";
+import Note from "../Note";
 
 const Popup = ({ showPopup, child, menu, centerPopup, equalPadding }) => {
   let mainDivClass = "dropdown ";
@@ -151,13 +152,15 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onNoteClicked: noteId => dispatch(setCurrentNoteId(noteId))
+    addNewNote: () => {
+      const note = new Note();
+      dispatch(addNewNote(note));
+      dispatch(setCurrentNoteId(note.id));
+    }
   };
 };
 
-export default Sidebar;
-
-//export default connect(
-//  mapStateToProps,
-//  mapDispatchToProps
-//)(Sidebar);
+export default connect(
+  null,
+  mapDispatchToProps
+)(Sidebar);

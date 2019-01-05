@@ -1,8 +1,10 @@
 import { ADD_NEW_NOTE, UPDATE_NOTE, SET_CURRENT_NOTE_ID } from "../actionTypes";
+import Note from "../../Note";
 
+const initialNote = new Note();
 const initialState = {
-  all: [],
-  currentNoteId: null
+  all: [initialNote],
+  currentNoteId: initialNote.id
 };
 
 export default function(state = initialState, action) {

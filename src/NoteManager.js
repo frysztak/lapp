@@ -1,5 +1,5 @@
 import Note from "./Note";
-import uuidv1 from "uuid/v1";
+//import uuidv1 from "uuid/v1";
 import { addNewNote, setCurrentNoteId } from "./redux/actions";
 
 class NoteManager {
@@ -7,22 +7,22 @@ class NoteManager {
     this.notes = [];
     this.store = store;
 
-    for (let i = 0; i < localStorage.length; i++) {
-      const noteID = localStorage.key(i);
-      const note = Note.parse(localStorage.getItem(noteID));
-      this.insertNote(note);
-      this.store.dispatch(addNewNote(note));
-    }
+    //for (let i = 0; i < localStorage.length; i++) {
+    //  const noteID = localStorage.key(i);
+    //  const note = Note.parse(localStorage.getItem(noteID));
+    //  this.insertNote(note);
+    //  //this.store.dispatch(addNewNote(note));
+    //}
 
-    this.store.dispatch(setCurrentNoteId(this.getNewestNote().id));
+    //this.store.dispatch(setCurrentNoteId(this.getNewestNote().id));
   }
 
-  addNewNote() {
-    const id = uuidv1();
-    const note = new Note(id, "new note");
-    this.insertNote(note);
-    return note;
-  }
+  //addNewNote() {
+  //  const id = uuidv1();
+  //  const note = new Note(id, "new note");
+  //  this.insertNote(note);
+  //  return note;
+  //}
 
   findNote(noteID) {
     const note = this.notes.find(note => note.id === noteID);

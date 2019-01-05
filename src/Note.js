@@ -1,7 +1,13 @@
 import Delta from "quill-delta";
+import uuidv1 from "uuid/v1";
 
 class Note {
-  constructor(id, name, text = new Delta(), lastEdit = new Date()) {
+  constructor(
+    id = uuidv1(),
+    name = "new note",
+    text = new Delta(),
+    lastEdit = new Date()
+  ) {
     this.id = id;
     this.name = name;
     this.text = text;

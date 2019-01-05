@@ -32,9 +32,9 @@ class App extends Component {
     this.onFilterChanged = this.onFilterChanged.bind(this);
 
     this.noteManager = new NoteManager(store);
-    if (this.noteManager.notes.length === 0) {
-      this.noteManager.addNewNote();
-    }
+    //if (this.noteManager.notes.length === 0) {
+    //  this.noteManager.addNewNote();
+    //}
 
     this.sortTypes = [
       new SortType(0, "Name", "asc"),

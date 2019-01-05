@@ -1,14 +1,13 @@
-import { SET_CURRENT_NOTE_ID } from "../actionTypes";
+import { TOGGLE_NOTE_DELETION_MODAL } from "../actionTypes";
 
 const initialState = {
-  currentNoteId: null
+  showNoteDeletionModal: false
 };
 
 export default function(state = initialState, action) {
   switch (action.type) {
-    case SET_CURRENT_NOTE_ID:
-      const { noteId } = action.payload;
-      return { currentNoteId: noteId };
+    case TOGGLE_NOTE_DELETION_MODAL:
+      return { showNoteDeletionModal: !state.showNoteDeletionModal };
     default:
       return state;
   }

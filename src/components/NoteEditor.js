@@ -1,29 +1,24 @@
 import React from "react";
+import PropTypes from "prop-types";
 import ClickToEdit from "./ClickToEdit";
 import ReactModal from "react-modal";
 import { connect } from "react-redux";
-import { updateNote } from "../redux/actions";
+import {
+  updateNote,
+  toggleNoteDeletionModal,
+  deleteCurrentNote,
+  setNewestNoteAsCurrent
+} from "../redux/actions";
 
 class NoteEditor extends React.Component {
   constructor(props) {
     super(props);
 
-    this.handleTextChange = this.handleTextChange.bind(this);
     this.onNoteNameChanged = this.onNoteNameChanged.bind(this);
     this.onNoteTextChanged = this.onNoteTextChanged.bind(this);
-    this.deleteNote = this.deleteNote.bind(this);
 
     this.nameEditorRef = React.createRef();
     this.bodyEditorRef = React.createRef();
-
-    this.state = {
-      showDeletionModal: false
-    };
-  }
-
-  handleTextChange(e) {
-    let text = e.target.value;
-    this.props.onTextChange(text);
   }
 
   onNoteTextChanged(text) {
@@ -39,17 +34,14 @@ class NoteEditor extends React.Component {
     this.props.onNoteChanged(updatedNote);
   }
 
-  deleteNote() {
-    this.props.onDeleteNote(this.props.currentNote);
-    this.setState({ showDeletionModal: false });
-  }
-
   overwriteNote(newNote) {
     this.nameEditorRef.current.overwriteText(newNote.name);
     this.bodyEditorRef.current.overwriteText(newNote.text);
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
+    if (!this.props.currentNote) return;
+
     if (
       !prevProps.currentNote ||
       prevProps.currentNote.id !== this.props.currentNote.id
@@ -92,11 +84,11 @@ class NoteEditor extends React.Component {
           tabIndex={2}
           plainText={false}
           onTextChange={this.onNoteTextChanged}
-          onDeleteNoteClicked={() => this.setState({ showDeletionModal: true })}
+          onDeleteNoteClicked={this.props.toggleNoteDeletionModal}
         />
 
         <ReactModal
-          isOpen={this.state.showDeletionModal}
+          isOpen={this.props.showDeletionModal}
           contentLabel="Minimal Modal Example"
           style={{
             overlay: {
@@ -123,7 +115,7 @@ class NoteEditor extends React.Component {
           <i
             style={{ margin: "-20px" }}
             className="fas fa-times is-pulled-right is-size-5"
-            onClick={() => this.setState({ showDeletionModal: false })}
+            onClick={this.props.toggleNoteDeletionModal}
             id="deleteIcon"
           />
 
@@ -139,14 +131,14 @@ class NoteEditor extends React.Component {
             <button
               className="is-size-5 button is-secondary"
               style={{ marginRight: "8px" }}
-              onClick={() => this.setState({ showDeletionModal: false })}
+              onClick={this.props.toggleNoteDeletionModal}
             >
               No
             </button>
 
             <button
               className="is-size-5 button is-primary"
-              onClick={this.deleteNote}
+              onClick={this.props.deleteNote}
             >
               Yes
             </button>
@@ -161,14 +153,29 @@ const mapStateToProps = state => {
   return {
     currentNote: state.notes.all.find(
       note => note.id === state.notes.currentNoteId
-    )
+    ),
+    showDeletionModal: state.editor.showNoteDeletionModal
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    onNoteChanged: note => dispatch(updateNote(note))
+    onNoteChanged: note => dispatch(updateNote(note)),
+    toggleNoteDeletionModal: () => dispatch(toggleNoteDeletionModal()),
+    deleteNote: () => {
+      dispatch(toggleNoteDeletionModal());
+      dispatch(deleteCurrentNote());
+      dispatch(setNewestNoteAsCurrent());
+    }
   };
+};
+
+NoteEditor.PropTypes = {
+  currentNote: PropTypes.object.isRequired,
+  onNoteChanged: PropTypes.func.isRequired,
+  showDeletionModal: PropTypes.bool.isRequired,
+  toggleNoteDeletionModal: PropTypes.func.isRequired,
+  deleteNote: PropTypes.func.isRequired
 };
 
 export default connect(

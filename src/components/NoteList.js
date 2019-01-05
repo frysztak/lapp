@@ -9,40 +9,13 @@ class NoteList extends Component {
     this.fileClicked = this.fileClicked.bind(this);
   }
 
-  processNotes() {
-    let notes = this.props.notes;
-    if (this.props.filter) {
-      notes = notes.filter(a => a.name.startsWith(this.props.filter));
-    }
-
-    if (this.props.sortOrder.parameter === "Name") {
-      const comparisonFunc =
-        this.props.sortOrder.modifier === "asc"
-          ? (a, b) => a.name.localeCompare(b.name)
-          : (a, b) => b.name.localeCompare(a.name);
-
-      return notes.sort(comparisonFunc);
-    } else if (this.props.sortOrder.parameter === "Last edited") {
-      const comparisonFunc =
-        this.props.sortOrder.modifier === "asc"
-          ? (a, b) => a.lastEdit - b.lastEdit
-          : (a, b) => b.lastEdit - a.lastEdit;
-
-      return notes.sort(comparisonFunc);
-    } else {
-      throw Error(`Unknown sortOrder '${this.props.sortOrder}'`);
-    }
-  }
-
   fileClicked(e) {
     const noteID = e.target.dataset.id;
     this.props.onNoteClicked(noteID);
   }
 
   render() {
-    const notes = this.processNotes();
-
-    const files = notes.map(note => {
+    const files = this.props.notes.map(note => {
       const isActive = this.props.currentNote
         ? this.props.currentNote.id === note.id
         : false;
@@ -63,9 +36,37 @@ class NoteList extends Component {
   }
 }
 
+const processNotes = (notes, filter, sortOrder) => {
+  let processedNotes = notes;
+  if (filter) {
+    processedNotes = notes.filter(a => a.name.startsWith(filter));
+  }
+
+  return processedNotes;
+
+  /*
+  if (sortOrder.parameter === "Name") {
+    const comparisonFunc =
+      sortOrder.modifier === "asc"
+        ? (a, b) => a.name.localeCompare(b.name)
+        : (a, b) => b.name.localeCompare(a.name);
+
+    return processedNotes.sort(comparisonFunc);
+  } else if (sortOrder.parameter === "Last edited") {
+    const comparisonFunc =
+      sortOrder.modifier === "asc"
+        ? (a, b) => a.lastEdit - b.lastEdit
+        : (a, b) => b.lastEdit - a.lastEdit;
+
+    return processedNotes.sort(comparisonFunc);
+  } else {
+    throw Error(`Unknown sortOrder '${sortOrder}'`);
+  }*/
+};
+
 const mapStateToProps = state => {
   return {
-    notes: state.notes.all,
+    notes: processNotes(state.notes.all, state.filtersort.filter),
     currentNote: state.notes.all.find(
       note => note.id === state.notes.currentNoteId
     )

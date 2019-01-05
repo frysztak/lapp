@@ -4,7 +4,10 @@ import {
   SET_CURRENT_NOTE_ID,
   TOGGLE_NOTE_DELETION_MODAL,
   DELETE_CURRENT_NOTE,
-  SET_NEWEST_NOTE_AS_CURRENT
+  SET_NEWEST_NOTE_AS_CURRENT,
+  TOGGLE_FILTER_POPUP,
+  HIDE_FILTER_POPUP,
+  SET_FILTER_VALUE
 } from "./actionTypes";
 
 export const addNewNote = note => ({
@@ -32,4 +35,17 @@ export const toggleNoteDeletionModal = () => ({
 
 export const deleteCurrentNote = () => ({
   type: DELETE_CURRENT_NOTE
+});
+
+export const toggleFilterPopup = () => ({
+  type: TOGGLE_FILTER_POPUP
+});
+
+export const hideFilterPopup = () => ({
+  type: HIDE_FILTER_POPUP
+});
+
+export const setFilterValue = value => ({
+  type: SET_FILTER_VALUE,
+  payload: { filterValue: value }
 });

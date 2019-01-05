@@ -1,7 +1,12 @@
 import React from "react";
 import NoteList from "./NoteList";
 import { connect } from "react-redux";
-import { addNewNote, setCurrentNoteId } from "../redux/actions";
+import {
+  addNewNote,
+  setCurrentNoteId,
+  toggleFilterPopup,
+  setFilterValue
+} from "../redux/actions";
 import Note from "../Note";
 
 const Popup = ({ showPopup, child, menu, centerPopup, equalPadding }) => {
@@ -145,8 +150,8 @@ const Sidebar = props => {
 
 const mapStateToProps = state => {
   return {
-    notes: state.notes.all,
-    currentNote: state.notes.all[state.notes.currentNoteId]
+    showFilterPopup: state.filtersort.showFilterPopup,
+    filter: state.filtersort.filter
   };
 };
 
@@ -156,11 +161,16 @@ const mapDispatchToProps = dispatch => {
       const note = new Note();
       dispatch(addNewNote(note));
       dispatch(setCurrentNoteId(note.id));
-    }
+    },
+    onFilterNotesClicked: ev => {
+      ev.stopPropagation();
+      dispatch(toggleFilterPopup());
+    },
+    onFilterChanged: ev => dispatch(setFilterValue(ev.target.value))
   };
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(Sidebar);

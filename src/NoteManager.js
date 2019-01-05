@@ -1,4 +1,4 @@
-import Note from "./Note";
+import Note, { NoteStatus } from "./Note";
 import uuidv1 from "uuid/v1";
 import { Dropbox } from "dropbox";
 import { fromDelta } from "quill-delta-markdown";
@@ -82,6 +82,14 @@ class NoteManager {
     return newNote;
   }
 
+  updateNoteSyncStatus(noteID, newStatus) {
+    const note = this.findNote(noteID);
+    if (!note) return null;
+    const newNote = note.updateStatus(newStatus);
+    this.replaceNote(note, newNote);
+    return newNote;
+  }
+
   setDropboxAccessToken(accessToken) {
     this.dropbox.setAccessToken(accessToken);
     this.beginDropboxSync();
@@ -97,6 +105,7 @@ class NoteManager {
     return this.notes.map(note => {
       return {
         name: `${note.name}.md`,
+        id: note.id,
         last_modified: this.convertDateTimeToDropboxFormat(note.lastEdit),
         content: fromDelta(note.text.ops)
       };
@@ -149,11 +158,15 @@ class NoteManager {
 
   async uploadFiles(localFiles) {
     for (const file of localFiles) {
+      this.updateNoteSyncStatus(file.id, NoteStatus.IN_PROGRESS);
+
       await this.dropbox.filesUpload({
         contents: file.content,
         path: `/${file.name}`,
         client_modified: file.last_modified
       });
+
+      this.updateNoteSyncStatus(file.id, NoteStatus.OK);
     }
   }
 }

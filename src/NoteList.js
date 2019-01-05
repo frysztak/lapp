@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { NoteStatus } from "./Note";
 
 class NoteList extends Component {
   constructor(props) {
@@ -42,6 +43,32 @@ class NoteList extends Component {
 
     const files = notes.map(note => {
       const isActive = this.props.currentNote.id === note.id;
+
+      let icon;
+      if (note.syncStatus === NoteStatus.DETACHED) {
+        icon = null;
+      } else {
+        let className;
+        switch (note.syncStatus) {
+          case NoteStatus.OK:
+            className = "has-text-success";
+            break;
+          case NoteStatus.IN_PROGRESS:
+            className = "has-text-success";
+            break;
+          case NoteStatus.ERROR:
+            className = "has-text-danger";
+            break;
+          default:
+            className = "";
+        }
+        icon = (
+          <span className={`icon ${className}`}>
+            <i className="fas fa-check-circle" />
+          </span>
+        );
+      }
+
       return (
         <li
           className="menu-note-list-item"
@@ -50,7 +77,8 @@ class NoteList extends Component {
           data-id={note.id}
           onClick={this.fileClicked}
         >
-          {note.name}
+          {icon}
+          <span>{note.name}</span>
         </li>
       );
     });

@@ -2,26 +2,25 @@ import { ADD_NEW_NOTE, UPDATE_NOTE, SET_CURRENT_NOTE_ID } from "../actionTypes";
 
 const initialState = {
   all: [],
-  currentNote: null
+  currentNoteId: null
 };
 
 export default function(state = initialState, action) {
   switch (action.type) {
-    case ADD_NEW_NOTE:
+    case ADD_NEW_NOTE: {
       const { note } = action.payload;
       return { ...state, all: [...state.all, note] };
-    case UPDATE_NOTE:
-      const { noteId, updatedNote } = action.payload;
+    }
+    case UPDATE_NOTE: {
+      const { note } = action.payload;
       return {
         ...state,
-        all: state.notes.map(note =>
-          note.id === noteId ? { ...note, ...updatedNote } : note
-        )
+        all: state.all.map(n => (n.id === note.id ? note : n))
       };
+    }
     case SET_CURRENT_NOTE_ID: {
       const { noteId } = action.payload;
-      const idx = state.all.findIndex(note => note.id === noteId);
-      return { ...state, currentNote: state.all[idx] };
+      return { ...state, currentNoteId: noteId };
     }
     default:
       return state;

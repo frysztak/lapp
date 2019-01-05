@@ -2,6 +2,7 @@ import React from "react";
 import ClickToEdit from "./ClickToEdit";
 import ReactModal from "react-modal";
 import { connect } from "react-redux";
+import { updateNote } from "../redux/actions";
 
 class NoteEditor extends React.Component {
   constructor(props) {
@@ -26,11 +27,16 @@ class NoteEditor extends React.Component {
   }
 
   onNoteTextChanged(text) {
-    this.props.onNoteTextChanged(text);
+    const updatedNote = this.props.currentNote.updateText(text, new Date());
+    this.props.onNoteChanged(updatedNote);
   }
 
   onNoteNameChanged(text) {
-    this.props.onNoteNameChanged(text.trim());
+    const updatedNote = this.props.currentNote.updateName(
+      text.trim(),
+      new Date()
+    );
+    this.props.onNoteChanged(updatedNote);
   }
 
   deleteNote() {
@@ -152,7 +158,20 @@ class NoteEditor extends React.Component {
 }
 
 const mapStateToProps = state => {
-  return { currentNote: state.notes.currentNote };
+  return {
+    currentNote: state.notes.all.find(
+      note => note.id === state.notes.currentNoteId
+    )
+  };
 };
 
-export default connect(mapStateToProps)(NoteEditor);
+const mapDispatchToProps = dispatch => {
+  return {
+    onNoteChanged: note => dispatch(updateNote(note))
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(NoteEditor);

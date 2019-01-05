@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { setCurrentNoteId } from "../redux/actions";
 
 class NoteList extends Component {
   constructor(props) {
@@ -41,7 +43,9 @@ class NoteList extends Component {
     const notes = this.processNotes();
 
     const files = notes.map(note => {
-      const isActive = this.props.currentNote.id === note.id;
+      const isActive = this.props.currentNote
+        ? this.props.currentNote.id === note.id
+        : false;
       return (
         <li
           className="menu-note-list-item"
@@ -59,4 +63,22 @@ class NoteList extends Component {
   }
 }
 
-export default NoteList;
+const mapStateToProps = state => {
+  return {
+    notes: state.notes.all,
+    currentNote: state.notes.all.find(
+      note => note.id === state.notes.currentNoteId
+    )
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onNoteClicked: noteId => dispatch(setCurrentNoteId(noteId))
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(NoteList);

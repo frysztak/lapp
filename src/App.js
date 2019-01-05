@@ -147,7 +147,8 @@ class App extends Component {
 
         <main id="panel">
           <div>
-            <NoteEditor
+            <NoteEditor />
+            {/*
               ref={this.noteEditorRef}
               currentNote={this.state.currentNote}
               onNoteNameChanged={this.handleNoteNameChange}
@@ -155,6 +156,7 @@ class App extends Component {
               onDeleteNote={this.deleteNote}
               onOpenSidebar={() => this.slideout.open()}
             />
+            */}
           </div>
         </main>
       </div>

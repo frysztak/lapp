@@ -5,12 +5,9 @@ export const addNewNote = note => ({
   payload: { note: note }
 });
 
-export const updateNote = (noteID, newNote) => ({
+export const updateNote = note => ({
   type: UPDATE_NOTE,
-  payload: {
-    currentNoteId: noteID,
-    newNote: newNote
-  }
+  payload: { note: note }
 });
 
 export const setCurrentNoteId = noteId => ({

@@ -132,8 +132,8 @@ const Sidebar = props => {
       <div className="menu-divider is-divider" />
 
       <NoteList
-        currentNote={props.currentNote}
-        notes={props.notes}
+        //currentNote={props.currentNote}
+        //notes={props.notes}
         onNoteClicked={props.onNoteClicked}
         sortOrder={props.sortOrder}
         filter={props.filter}
@@ -145,7 +145,7 @@ const Sidebar = props => {
 const mapStateToProps = state => {
   return {
     notes: state.notes.all,
-    currentNote: state.notes.currentNote
+    currentNote: state.notes.all[state.notes.currentNoteId]
   };
 };
 
@@ -155,7 +155,9 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Sidebar);
+export default Sidebar;
+
+//export default connect(
+//  mapStateToProps,
+//  mapDispatchToProps
+//)(Sidebar);

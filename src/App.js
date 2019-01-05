@@ -9,17 +9,9 @@ import Sidebar from "./components/Sidebar";
 
 import store from "./redux/store";
 import { connect } from "react-redux";
-import { hideFilterPopup } from "./redux/actions";
+import { hideFilterPopup, hideSortPopup } from "./redux/actions";
 
 ReactModal.setAppElement("#root");
-
-class SortType {
-  constructor(id, parameter, modifier) {
-    this.id = id;
-    this.parameter = parameter;
-    this.modifier = modifier;
-  }
-}
 
 class App extends Component {
   constructor(props) {
@@ -38,18 +30,11 @@ class App extends Component {
     //  this.noteManager.addNewNote();
     //}
 
-    this.sortTypes = [
-      new SortType(0, "Name", "asc"),
-      new SortType(1, "Name", "desc"),
-      new SortType(2, "Last edited", "asc"),
-      new SortType(3, "Last edited", "desc")
-    ];
-
     this.noteEditorRef = React.createRef();
 
     this.state = {
-      showSortPopup: false,
-      sortOrder: this.sortTypes[0]
+      showSortPopup: false
+      //sortOrder: this.sortTypes[0]
     };
   }
 
@@ -152,6 +137,7 @@ const mapDispatchToProps = dispatch => {
   return {
     hidePopups: () => {
       dispatch(hideFilterPopup());
+      dispatch(hideSortPopup());
     }
   };
 };

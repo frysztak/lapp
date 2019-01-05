@@ -42,9 +42,6 @@ const processNotes = (notes, filter, sortOrder) => {
     processedNotes = notes.filter(a => a.name.startsWith(filter));
   }
 
-  return processedNotes;
-
-  /*
   if (sortOrder.parameter === "Name") {
     const comparisonFunc =
       sortOrder.modifier === "asc"
@@ -61,12 +58,16 @@ const processNotes = (notes, filter, sortOrder) => {
     return processedNotes.sort(comparisonFunc);
   } else {
     throw Error(`Unknown sortOrder '${sortOrder}'`);
-  }*/
+  }
 };
 
 const mapStateToProps = state => {
   return {
-    notes: processNotes(state.notes.all, state.filtersort.filter),
+    notes: processNotes(
+      state.notes.all,
+      state.filtersort.filter,
+      state.filtersort.sortOrder
+    ),
     currentNote: state.notes.all.find(
       note => note.id === state.notes.currentNoteId
     )

@@ -7,7 +7,10 @@ import {
   SET_NEWEST_NOTE_AS_CURRENT,
   TOGGLE_FILTER_POPUP,
   HIDE_FILTER_POPUP,
-  SET_FILTER_VALUE
+  SET_FILTER_VALUE,
+  SET_SORT_VALUE,
+  HIDE_SORT_POPUP,
+  TOGGLE_SORT_POPUP
 } from "./actionTypes";
 
 export const addNewNote = note => ({
@@ -48,4 +51,17 @@ export const hideFilterPopup = () => ({
 export const setFilterValue = value => ({
   type: SET_FILTER_VALUE,
   payload: { filterValue: value }
+});
+
+export const toggleSortPopup = () => ({
+  type: TOGGLE_SORT_POPUP
+});
+
+export const hideSortPopup = () => ({
+  type: HIDE_SORT_POPUP
+});
+
+export const setSortValue = value => ({
+  type: SET_SORT_VALUE,
+  payload: { sortValue: value }
 });

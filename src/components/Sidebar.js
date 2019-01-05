@@ -1,13 +1,17 @@
 import React from "react";
 import NoteList from "./NoteList";
+import Note from "../Note";
+import { SortTypes } from "./../constants";
+
 import { connect } from "react-redux";
 import {
   addNewNote,
   setCurrentNoteId,
   toggleFilterPopup,
-  setFilterValue
+  setFilterValue,
+  toggleSortPopup,
+  setSortValue
 } from "../redux/actions";
-import Note from "../Note";
 
 const Popup = ({ showPopup, child, menu, centerPopup, equalPadding }) => {
   let mainDivClass = "dropdown ";
@@ -123,7 +127,7 @@ const Sidebar = props => {
                 onClick={props.onSortNotesClicked}
               />
             }
-            menu={props.sortTypes.map(sortType => (
+            menu={SortTypes.map(sortType => (
               <SortListItem
                 sortType={sortType}
                 currentSortOrder={props.sortOrder}
@@ -151,7 +155,9 @@ const Sidebar = props => {
 const mapStateToProps = state => {
   return {
     showFilterPopup: state.filtersort.showFilterPopup,
-    filter: state.filtersort.filter
+    filter: state.filtersort.filter,
+    showSortPopup: state.filtersort.showSortPopup,
+    sortOrder: state.filtersort.sortOrder
   };
 };
 
@@ -166,7 +172,12 @@ const mapDispatchToProps = dispatch => {
       ev.stopPropagation();
       dispatch(toggleFilterPopup());
     },
-    onFilterChanged: ev => dispatch(setFilterValue(ev.target.value))
+    onFilterChanged: ev => dispatch(setFilterValue(ev.target.value)),
+    onSortNotesClicked: ev => {
+      ev.stopPropagation();
+      dispatch(toggleSortPopup());
+    },
+    onSortOrderClicked: sortOrder => dispatch(setSortValue(sortOrder))
   };
 };
 

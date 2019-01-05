@@ -9,7 +9,7 @@ import Sidebar from "./components/Sidebar";
 
 import store from "./redux/store";
 import { connect } from "react-redux";
-import { hideFilterPopup, hideSortPopup } from "./redux/actions";
+import { hideFilterPopup, hideSortPopup, toggleSidebar } from "./redux/actions";
 
 ReactModal.setAppElement("#root");
 
@@ -46,6 +46,12 @@ class App extends Component {
       tolerance: 70
     });
     this.slideout.open();
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.showSidebar !== this.props.showSidebar) {
+      this.slideout.toggle();
+    }
   }
 
   handleNoteClicked(noteID) {
@@ -133,6 +139,12 @@ class App extends Component {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    showSidebar: state.editor.showSidebar
+  };
+};
+
 const mapDispatchToProps = dispatch => {
   return {
     hidePopups: () => {
@@ -143,10 +155,11 @@ const mapDispatchToProps = dispatch => {
 };
 
 App.PropTypes = {
+  showSidebar: PropTypes.bool.isRequired,
   hidePopups: PropTypes.func.isRequired
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(App);

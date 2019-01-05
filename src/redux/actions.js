@@ -10,7 +10,8 @@ import {
   SET_FILTER_VALUE,
   SET_SORT_VALUE,
   HIDE_SORT_POPUP,
-  TOGGLE_SORT_POPUP
+  TOGGLE_SORT_POPUP,
+  TOGGLE_SIDEBAR
 } from "./actionTypes";
 
 export const addNewNote = note => ({
@@ -64,4 +65,8 @@ export const hideSortPopup = () => ({
 export const setSortValue = value => ({
   type: SET_SORT_VALUE,
   payload: { sortValue: value }
+});
+
+export const toggleSidebar = () => ({
+  type: TOGGLE_SIDEBAR
 });

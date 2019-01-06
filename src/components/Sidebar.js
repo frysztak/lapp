@@ -144,7 +144,7 @@ const Sidebar = props => {
 
       <NoteList />
 
-      {props.hasDropboxIntegration ? null : (
+      {props.dropboxSyncEnabled ? null : (
         <div className="has-text-centered">
           <div className="menu-divider is-divider" />
           <button
@@ -167,7 +167,8 @@ const mapStateToProps = state => {
     showFilterPopup: state.filtersort.showFilterPopup,
     filter: state.filtersort.filter,
     showSortPopup: state.filtersort.showSortPopup,
-    sortOrder: state.filtersort.sortOrder
+    sortOrder: state.filtersort.sortOrder,
+    dropboxSyncEnabled: state.dropbox.synchronizationEnabled
   };
 };
 

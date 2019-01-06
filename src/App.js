@@ -4,39 +4,20 @@ import "./App.css";
 import Slideout from "slideout";
 import NoteEditor from "./components/NoteEditor";
 import ReactModal from "react-modal";
-import Cookies from "js-cookie";
 import { env as Env } from "./Env";
 import Sidebar from "./components/Sidebar";
 
 import { connect } from "react-redux";
-import { hideFilterPopup, hideSortPopup } from "./redux/actions";
+import {
+  hideFilterPopup,
+  hideSortPopup,
+  setDropboxSyncEnabled
+} from "./redux/actions";
 
 ReactModal.setAppElement("#root");
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-
-    //if (this.isDropboxIntegrationEnabled()) {
-    //  this.noteManager.setDropboxAccessToken(
-    //    Cookies.get(Env.DropboxAccessTokenCookieName)
-    //  );
-    //}
-  }
-
-  isDropboxIntegrationEnabled() {
-    return Cookies.get(Env.DropboxAccessTokenCookieName) || false;
-  }
-
-  async componentDidMount() {
-    this.slideout = new Slideout({
-      panel: document.getElementById("panel"),
-      menu: document.getElementById("menu"),
-      padding: 256,
-      tolerance: 70
-    });
-    this.slideout.open();
-
+  async checkForDropboxAuthCode() {
     const currentURL = new URL(window.location.href);
     if (currentURL.pathname === `/${Env.DropboxRedirectPath}`) {
       if (currentURL.searchParams.has("code")) {
@@ -58,15 +39,21 @@ class App extends Component {
           return;
         }
 
-        this.noteManager.setDropboxAccessToken(
-          Cookies.get(Env.DropboxAccessTokenCookieName)
-        );
-
-        this.setState({
-          dropboxIntegrationEnabled: this.isDropboxIntegrationEnabled()
-        });
+        this.props.setDropboxSyncEnabled(true);
       }
     }
+  }
+
+  async componentDidMount() {
+    this.slideout = new Slideout({
+      panel: document.getElementById("panel"),
+      menu: document.getElementById("menu"),
+      padding: 256,
+      tolerance: 70
+    });
+    this.slideout.open();
+
+    await this.checkForDropboxAuthCode();
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -103,7 +90,8 @@ const mapDispatchToProps = dispatch => {
     hidePopups: () => {
       dispatch(hideFilterPopup());
       dispatch(hideSortPopup());
-    }
+    },
+    setDropboxSyncEnabled: enabled => dispatch(setDropboxSyncEnabled(enabled))
   };
 };
 

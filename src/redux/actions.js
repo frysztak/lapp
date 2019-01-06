@@ -11,7 +11,10 @@ import {
   SET_SORT_VALUE,
   HIDE_SORT_POPUP,
   TOGGLE_SORT_POPUP,
-  TOGGLE_SIDEBAR
+  TOGGLE_SIDEBAR,
+  SET_NOTE_SYNC_STATUS,
+  SET_DROPBOX_SYNC_ENABLED,
+  SET_DROPBOX_ACCESS_TOKEN
 } from "./actionTypes";
 
 export const addNewNote = note => ({
@@ -69,4 +72,19 @@ export const setSortValue = value => ({
 
 export const toggleSidebar = () => ({
   type: TOGGLE_SIDEBAR
+});
+
+export const setDropboxSyncEnabled = enabled => ({
+  type: SET_DROPBOX_SYNC_ENABLED,
+  payload: { enabled: enabled }
+});
+
+export const setDropboxAccessToken = token => ({
+  type: SET_DROPBOX_ACCESS_TOKEN,
+  payload: { accessToken: token }
+});
+
+export const setNoteSyncStatus = (noteId, syncStatus) => ({
+  type: SET_NOTE_SYNC_STATUS,
+  payload: { noteId: noteId, syncStatus: syncStatus }
 });

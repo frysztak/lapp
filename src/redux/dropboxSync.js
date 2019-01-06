@@ -1,23 +1,26 @@
 import { Dropbox } from "dropbox";
-import { fromDelta } from "quill-delta-markdown";
-import moment from "moment";
 import Cookies from "js-cookie";
 import { env as Env } from "../Env";
 import { setDropboxSyncEnabled } from "./actions";
 import { NoteStatus } from "../constants";
 
 export default class DropboxSync {
-  constructor() {
-    this.dropbox = new Dropbox({ fetch: window.fetch });
+  constructor(remoteFiles = [], localFiles = [], fetch = window.fetch) {
+    this.dropbox = new Dropbox({ fetch: fetch });
+    this.remoteFiles = remoteFiles;
+    this.localFiles = localFiles;
   }
 
   attach(store) {
     this.store = store;
+    this.localFiles = store
+      .getState()
+      .notes.all.map(note => this.convertNoteToFile(note));
 
     const accessToken = Cookies.get(Env.DropboxAccessTokenCookieName);
     if (accessToken) {
-      store.dispatch(setDropboxSyncEnabled(true));
-      this.dropbox.setAccessToken(accessToken);
+      this._setup(accessToken);
+      return;
     }
 
     store.subscribe(() => {
@@ -26,32 +29,54 @@ export default class DropboxSync {
 
       const accessToken = store.getState().dropbox.dbxAccessToken;
       if (accessToken !== currentToken) {
-        this.dropbox.setAccessToken(accessToken);
+        this._setup(accessToken);
       }
     });
   }
 
-  convertDateTimeToDropboxFormat(datetime) {
-    return (
-      moment.utc(datetime, moment.ISO_8601).format("YYYY-MM-DDTHH:mm:ss") + "Z"
-    );
+  _setup(accessToken) {
+    this.store.dispatch(setDropboxSyncEnabled(true));
+    this.dropbox.setAccessToken(accessToken);
+
+    this.dropbox
+      .filesListFolder({ path: "" })
+      .then(response => {
+        if (response.has_more) {
+          throw Error("has_more not yet supported");
+        }
+
+        this.remoteFiles = response.entries.filter(file =>
+          file.name.endsWith(".md")
+        );
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 
-  convertNoteToDropboxFile(note) {
-    return {
-      name: `${note.name}.md`,
-      id: note.id,
-      last_modified: this.convertDateTimeToDropboxFormat(note.lastEdit),
-      content: fromDelta(note.text.ops)
-    };
+  enqueueChange(change) {}
+
+  _compareFiles(A, B) {
+    if (A.content_hash === B.content_hash) return true;
+    return false;
+  }
+
+  calculateDiff() {
+    const actions = [];
+
+    const toDownload = this.remoteFiles.filter(f =>
+      this.localFiles.find(l => this._compareFiles(f, l))
+    );
+
+    return { toDownload: toDownload };
   }
 
   getLocalFileList() {
-    return this.notes.map(note => this.convertNoteToDropboxFile(note));
+    return this.notes.map(note => this.convertNoteToFile(note));
   }
 
   async updateNote(note) {
-    const file = this.convertNoteToDropboxFile(note);
+    const file = this.convertNoteToFile(note);
 
     try {
       await this.dropbox.filesUpload({

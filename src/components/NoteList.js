@@ -1,12 +1,19 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { setCurrentNoteId } from "../redux/actions";
+import { NoteStatus } from "../constants";
 
 class NoteList extends Component {
   constructor(props) {
     super(props);
 
     this.fileClicked = this.fileClicked.bind(this);
+    this.statusMapping = {
+      [NoteStatus.OK]: "",
+      [NoteStatus.IN_PROGRESS]: "has-text-info",
+      [NoteStatus.OK]: "has-text-success",
+      [NoteStatus.ERROR]: "has-text-danger"
+    };
   }
 
   fileClicked(e) {
@@ -16,9 +23,12 @@ class NoteList extends Component {
 
   render() {
     const files = this.props.notes.map(note => {
+      const status = this.props.notesStatus[note.id];
+
       const isActive = this.props.currentNote
         ? this.props.currentNote.id === note.id
         : false;
+
       return (
         <li
           className="menu-note-list-item"
@@ -27,6 +37,9 @@ class NoteList extends Component {
           data-id={note.id}
           onClick={this.fileClicked}
         >
+          <span className={`icon is-medium ${this.statusMapping[status]}`}>
+            <i className="fas fa-check-circle" />
+          </span>
           {note.name}
         </li>
       );
@@ -68,6 +81,7 @@ const mapStateToProps = state => {
       state.filtersort.filter,
       state.filtersort.sortOrder
     ),
+    notesStatus: state.dropbox.notesStatus,
     currentNote: state.notes.all.find(
       note => note.id === state.notes.currentNoteId
     )

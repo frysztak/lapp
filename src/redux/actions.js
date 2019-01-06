@@ -25,12 +25,8 @@ export const addNewNote = note => ({
 });
 
 export const updateNote = (note, justRename) => async (dispatch, getState) => {
-  dispatch({
-    type: UPDATE_NOTE,
-    payload: { note: note, justRename: justRename }
-  });
-
   dispatch(setNoteSyncStatus(note.id, NoteStatus.IN_PROGRESS));
+
   let success = false;
   if (justRename) {
     const oldNote = getState().notes.all.find(n => n.id === note.id);
@@ -39,6 +35,11 @@ export const updateNote = (note, justRename) => async (dispatch, getState) => {
     success = await dropbox.updateNote(note);
   }
   const status = success ? NoteStatus.OK : NoteStatus.ERROR;
+
+  dispatch({
+    type: UPDATE_NOTE,
+    payload: { note: note, justRename: justRename }
+  });
   dispatch(setNoteSyncStatus(note.id, status));
 };
 

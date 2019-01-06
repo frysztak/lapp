@@ -1,14 +1,13 @@
-import Note, { NoteStatus } from "./../Note";
-import uuidv1 from "uuid/v1";
 import { Dropbox } from "dropbox";
 import { fromDelta } from "quill-delta-markdown";
 import moment from "moment";
 import Cookies from "js-cookie";
 import { env as Env } from "../Env";
 import { setDropboxSyncEnabled } from "./actions";
+import { NoteStatus } from "../constants";
 
 export default class DropboxSync {
-  constructor(store) {
+  constructor() {
     this.dropbox = new Dropbox({ fetch: window.fetch });
   }
 
@@ -22,8 +21,11 @@ export default class DropboxSync {
     }
 
     store.subscribe(() => {
+      const currentToken = this.dropbox.getAccessToken();
+      if (currentToken) return;
+
       const accessToken = store.getState().dropbox.dbxAccessToken;
-      if (accessToken !== this.dropbox.getAccessToken()) {
+      if (accessToken !== currentToken) {
         this.dropbox.setAccessToken(accessToken);
       }
     });
@@ -35,15 +37,56 @@ export default class DropboxSync {
     );
   }
 
+  convertNoteToDropboxFile(note) {
+    return {
+      name: `${note.name}.md`,
+      id: note.id,
+      last_modified: this.convertDateTimeToDropboxFormat(note.lastEdit),
+      content: fromDelta(note.text.ops)
+    };
+  }
+
   getLocalFileList() {
-    return this.notes.map(note => {
-      return {
-        name: `${note.name}.md`,
-        id: note.id,
-        last_modified: this.convertDateTimeToDropboxFormat(note.lastEdit),
-        content: fromDelta(note.text.ops)
-      };
-    });
+    return this.notes.map(note => this.convertNoteToDropboxFile(note));
+  }
+
+  async updateNote(note) {
+    const file = this.convertNoteToDropboxFile(note);
+
+    try {
+      await this.dropbox.filesUpload({
+        contents: file.content,
+        path: `/${file.name}`,
+        client_modified: file.last_modified
+      });
+      return true;
+    } catch (err) {
+      console.log(err);
+      return false;
+    }
+  }
+
+  async renameNote(oldNote, newNote) {
+    try {
+      await this.dropbox.filesMoveV2({
+        from_path: `/${oldNote.name}.md`,
+        to_path: `/${newNote.name}.md`
+      });
+      return true;
+    } catch (err) {
+      if (err.error.error_summary === "from_lookup/not_found/..") {
+        try {
+          await this.updateNote(newNote);
+          return true;
+        } catch (errr) {
+          console.log(errr);
+          return false;
+        }
+      }
+
+      console.log(err);
+      return false;
+    }
   }
 
   async beginDropboxSync() {

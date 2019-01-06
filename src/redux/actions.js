@@ -16,16 +16,31 @@ import {
   SET_DROPBOX_SYNC_ENABLED,
   SET_DROPBOX_ACCESS_TOKEN
 } from "./actionTypes";
+import { dropbox } from "./store";
+import { NoteStatus } from "../constants";
 
 export const addNewNote = note => ({
   type: ADD_NEW_NOTE,
   payload: { note: note }
 });
 
-export const updateNote = note => ({
-  type: UPDATE_NOTE,
-  payload: { note: note }
-});
+export const updateNote = (note, justRename) => async (dispatch, getState) => {
+  dispatch({
+    type: UPDATE_NOTE,
+    payload: { note: note, justRename: justRename }
+  });
+
+  dispatch(setNoteSyncStatus(note.id, NoteStatus.IN_PROGRESS));
+  let success = false;
+  if (justRename) {
+    const oldNote = getState().notes.all.find(n => n.id === note.id);
+    success = await dropbox.renameNote(oldNote, note);
+  } else {
+    success = await dropbox.updateNote(note);
+  }
+  const status = success ? NoteStatus.OK : NoteStatus.ERROR;
+  dispatch(setNoteSyncStatus(note.id, status));
+};
 
 export const setCurrentNoteId = noteId => ({
   type: SET_CURRENT_NOTE_ID,

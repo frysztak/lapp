@@ -14,8 +14,8 @@ export const SortTypes = [
 ];
 
 export const NoteStatus = {
-  DETACHED: 0, // used when synchronization is disabled
-  IN_PROGRESS: 1,
-  OK: 2,
-  ERROR: 3
+  DETACHED: "DETACHED", // used when synchronization is disabled
+  IN_PROGRESS: "IN_PROGRESS",
+  OK: "OK",
+  ERROR: "ERROR"
 };

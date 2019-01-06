@@ -1,6 +1,18 @@
 import React from "react";
 import NoteList from "./NoteList";
-import { env as Env } from "./Env";
+import { env as Env } from "./../Env";
+import Note from "../Note";
+import { SortTypes } from "./../constants";
+
+import { connect } from "react-redux";
+import {
+  addNewNote,
+  setCurrentNoteId,
+  toggleFilterPopup,
+  setFilterValue,
+  toggleSortPopup,
+  setSortValue
+} from "../redux/actions";
 
 const Popup = ({ showPopup, child, menu, centerPopup, equalPadding }) => {
   let mainDivClass = "dropdown ";
@@ -116,7 +128,7 @@ const Sidebar = props => {
                 onClick={props.onSortNotesClicked}
               />
             }
-            menu={props.sortTypes.map(sortType => (
+            menu={SortTypes.map(sortType => (
               <SortListItem
                 sortType={sortType}
                 currentSortOrder={props.sortOrder}
@@ -130,13 +142,7 @@ const Sidebar = props => {
 
       <div className="menu-divider is-divider" />
 
-      <NoteList
-        currentNote={props.currentNote}
-        notes={props.notes}
-        onNoteClicked={props.onNoteClicked}
-        sortOrder={props.sortOrder}
-        filter={props.filter}
-      />
+      <NoteList />
 
       {props.hasDropboxIntegration ? null : (
         <div className="has-text-centered">
@@ -156,4 +162,36 @@ const Sidebar = props => {
   );
 };
 
-export default Sidebar;
+const mapStateToProps = state => {
+  return {
+    showFilterPopup: state.filtersort.showFilterPopup,
+    filter: state.filtersort.filter,
+    showSortPopup: state.filtersort.showSortPopup,
+    sortOrder: state.filtersort.sortOrder
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    addNewNote: () => {
+      const note = new Note();
+      dispatch(addNewNote(note));
+      dispatch(setCurrentNoteId(note.id));
+    },
+    onFilterNotesClicked: ev => {
+      ev.stopPropagation();
+      dispatch(toggleFilterPopup());
+    },
+    onFilterChanged: ev => dispatch(setFilterValue(ev.target.value)),
+    onSortNotesClicked: ev => {
+      ev.stopPropagation();
+      dispatch(toggleSortPopup());
+    },
+    onSortOrderClicked: sortOrder => dispatch(setSortValue(sortOrder))
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Sidebar);

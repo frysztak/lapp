@@ -1,59 +1,25 @@
 import Delta from "quill-delta";
-
-export const NoteStatus = {
-  DETACHED: 0, // used when synchronization is disabled
-  IN_PROGRESS: 1,
-  OK: 2,
-  ERROR: 3
-};
+import uuidv1 from "uuid/v1";
 
 class Note {
   constructor(
-    id,
-    name,
+    id = uuidv1(),
+    name = "new note",
     text = new Delta(),
-    lastEdit = new Date(),
-    syncStatus = NoteStatus.DETACHED
+    lastEdit = new Date()
   ) {
     this.id = id;
     this.name = name;
     this.text = text;
     this.lastEdit = lastEdit;
-    this.syncStatus = syncStatus;
   }
 
-  static parse(json) {
-    const dateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{1,}Z$/;
-
-    const reviver = (key, value) => {
-      if (typeof value === "string" && dateFormat.test(value)) {
-        return new Date(value);
-      }
-
-      return value;
-    };
-    const obj = JSON.parse(json, reviver);
-    return new Note(obj.id, obj.name, new Delta(obj.text), obj.lastEdit);
+  static updateText(note, newText, editTime) {
+    return new Note(note.id, note.name, newText, editTime);
   }
 
-  serialise() {
-    const replacer = (key, value) => {
-      if (key === "syncStatus") return undefined;
-      return value;
-    };
-    return JSON.stringify(this, replacer);
-  }
-
-  updateText(newText, editTime) {
-    return new Note(this.id, this.name, newText, editTime);
-  }
-
-  updateName(newName, editTime) {
-    return new Note(this.id, newName, this.text, editTime);
-  }
-
-  updateStatus(newStatus) {
-    return new Note(this.id, this.name, this.text, this.editTime, newStatus);
+  static updateName(note, newName, editTime) {
+    return new Note(note.id, newName, note.text, editTime);
   }
 }
 

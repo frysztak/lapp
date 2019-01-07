@@ -8,7 +8,8 @@ import {
   toggleNoteDeletionModal,
   deleteCurrentNote,
   setNewestNoteAsCurrent,
-  toggleSidebar
+  toggleSidebar,
+  renameNote
 } from "../redux/actions";
 import Note from "../Note";
 
@@ -29,7 +30,7 @@ class NoteEditor extends React.Component {
       text,
       new Date()
     );
-    this.props.onNoteChanged(updatedNote, false);
+    this.props.onNoteChanged(updatedNote);
   }
 
   onNoteNameChanged(text) {
@@ -38,7 +39,7 @@ class NoteEditor extends React.Component {
       text.trim(),
       new Date()
     );
-    this.props.onNoteChanged(updatedNote, true);
+    this.props.onNoteRenamed(updatedNote);
   }
 
   overwriteNote(newNote) {
@@ -167,7 +168,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onNoteChanged: (note, justRename) => dispatch(updateNote(note, justRename)),
+    onNoteChanged: note => dispatch(updateNote(note)),
+    onNoteRenamed: note => dispatch(renameNote(note)),
     toggleNoteDeletionModal: () => dispatch(toggleNoteDeletionModal()),
     deleteNote: () => {
       dispatch(toggleNoteDeletionModal());

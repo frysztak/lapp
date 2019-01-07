@@ -1,4 +1,5 @@
 export const ADD_NEW_NOTE = "ADD_NEW_NOTE";
+export const RENAME_NOTE = "RENAME_NOTE";
 export const UPDATE_NOTE = "UPDATE_NOTE";
 
 export const SET_NEWEST_NOTE_AS_CURRENT = "SET_NEWEST_NOTE_AS_CURRENT";

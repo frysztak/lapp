@@ -14,7 +14,8 @@ import {
   TOGGLE_SIDEBAR,
   SET_NOTE_SYNC_STATUS,
   SET_DROPBOX_SYNC_ENABLED,
-  SET_DROPBOX_ACCESS_TOKEN
+  SET_DROPBOX_ACCESS_TOKEN,
+  RENAME_NOTE
 } from "./actionTypes";
 import { dropbox } from "./store";
 import { NoteStatus } from "../constants";
@@ -24,6 +25,12 @@ export const addNewNote = note => ({
   payload: { note: note }
 });
 
+export const updateNote = note => ({
+  type: UPDATE_NOTE,
+  payload: { updatedNote: note }
+});
+
+/*
 export const updateNote = (note, justRename) => async (dispatch, getState) => {
   dispatch(setNoteSyncStatus(note.id, NoteStatus.IN_PROGRESS));
 
@@ -42,6 +49,12 @@ export const updateNote = (note, justRename) => async (dispatch, getState) => {
   });
   dispatch(setNoteSyncStatus(note.id, status));
 };
+*/
+
+export const renameNote = note => ({
+  type: RENAME_NOTE,
+  payload: { updatedNote: note }
+});
 
 export const setCurrentNoteId = noteId => ({
   type: SET_CURRENT_NOTE_ID,

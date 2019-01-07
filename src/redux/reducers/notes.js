@@ -3,7 +3,8 @@ import {
   SET_CURRENT_NOTE_ID,
   DELETE_CURRENT_NOTE,
   SET_NEWEST_NOTE_AS_CURRENT,
-  UPDATE_NOTE
+  UPDATE_NOTE,
+  RENAME_NOTE
 } from "../actionTypes";
 import Note from "../../Note";
 
@@ -20,11 +21,12 @@ export default function(state = initialState, action) {
       return { ...state, all: [...state.all, note] };
     }
 
+    case RENAME_NOTE:
     case UPDATE_NOTE: {
-      const { note, justRename } = action.payload;
+      const { updatedNote } = action.payload;
       return {
         ...state,
-        all: state.all.map(n => (n.id === note.id ? note : n))
+        all: state.all.map(n => (n.id === updatedNote.id ? updatedNote : n))
       };
     }
 

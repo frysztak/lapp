@@ -56,21 +56,6 @@ export default class DropboxSync {
 
   enqueueChange(change) {}
 
-  _compareFiles(A, B) {
-    if (A.content_hash === B.content_hash) return true;
-    return false;
-  }
-
-  calculateDiff() {
-    const actions = [];
-
-    const toDownload = this.remoteFiles.filter(f =>
-      this.localFiles.find(l => this._compareFiles(f, l))
-    );
-
-    return { toDownload: toDownload };
-  }
-
   getLocalFileList() {
     return this.notes.map(note => this.convertNoteToFile(note));
   }

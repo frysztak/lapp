@@ -25,9 +25,9 @@ export const addNewNote = note => ({
   payload: { note: note }
 });
 
-export const updateNote = note => ({
+export const updateNote = (oldNote, updatedNote) => ({
   type: UPDATE_NOTE,
-  payload: { updatedNote: note }
+  payload: { oldNote: oldNote, updatedNote: updatedNote }
 });
 
 /*
@@ -51,9 +51,9 @@ export const updateNote = (note, justRename) => async (dispatch, getState) => {
 };
 */
 
-export const renameNote = note => ({
+export const renameNote = (oldNote, updatedNote) => ({
   type: RENAME_NOTE,
-  payload: { updatedNote: note }
+  payload: { oldNote: oldNote, updatedNote: updatedNote }
 });
 
 export const setCurrentNoteId = noteId => ({

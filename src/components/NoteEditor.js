@@ -25,21 +25,15 @@ class NoteEditor extends React.Component {
   }
 
   onNoteTextChanged(text) {
-    const updatedNote = Note.updateText(
-      this.props.currentNote,
-      text,
-      new Date()
-    );
-    this.props.onNoteChanged(updatedNote);
+    const oldNote = this.props.currentNote;
+    const updatedNote = Note.updateText(oldNote, text, new Date());
+    this.props.onNoteChanged(oldNote, updatedNote);
   }
 
   onNoteNameChanged(text) {
-    const updatedNote = Note.updateName(
-      this.props.currentNote,
-      text.trim(),
-      new Date()
-    );
-    this.props.onNoteRenamed(updatedNote);
+    const oldNote = this.props.currentNote;
+    const updatedNote = Note.updateName(oldNote, text.trim(), new Date());
+    this.props.onNoteRenamed(oldNote, updatedNote);
   }
 
   overwriteNote(newNote) {
@@ -168,8 +162,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onNoteChanged: note => dispatch(updateNote(note)),
-    onNoteRenamed: note => dispatch(renameNote(note)),
+    onNoteChanged: (oldNote, updatedNote) =>
+      dispatch(updateNote(oldNote, updatedNote)),
+    onNoteRenamed: (oldNote, updatedNote) =>
+      dispatch(renameNote(oldNote, updatedNote)),
     toggleNoteDeletionModal: () => dispatch(toggleNoteDeletionModal()),
     deleteNote: () => {
       dispatch(toggleNoteDeletionModal());

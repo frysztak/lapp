@@ -23,7 +23,7 @@ export default function(state = initialState, action) {
 
     case RENAME_NOTE:
     case UPDATE_NOTE: {
-      const { updatedNote } = action.payload;
+      const { oldNote, updatedNote } = action.payload;
       return {
         ...state,
         all: state.all.map(n => (n.id === updatedNote.id ? updatedNote : n))

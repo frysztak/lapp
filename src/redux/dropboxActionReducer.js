@@ -37,7 +37,8 @@ export const convertToDropboxAction = reduxAction => {
     return {
       type: DBX_RENAME,
       from: oldNote.name,
-      to: updatedNote.name
+      to: updatedNote.name,
+      noteId: oldNote.id // not needed for dropbox, but needed to set sync status
     };
   } else if (reduxAction.type === UPDATE_NOTE) {
     const { oldNote, updatedNote } = reduxAction.payload;

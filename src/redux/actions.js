@@ -25,10 +25,14 @@ export const addNewNote = note => ({
   payload: { note: note }
 });
 
-export const updateNote = (oldNote, updatedNote) => ({
-  type: UPDATE_NOTE,
-  payload: { oldNote: oldNote, updatedNote: updatedNote }
-});
+export const updateNote = (oldNote, updatedNote) => {
+  const action = {
+    type: UPDATE_NOTE,
+    payload: { oldNote: oldNote, updatedNote: updatedNote }
+  };
+  dropbox.enqueueAction(action);
+  return action;
+};
 
 /*
 export const updateNote = (note, justRename) => async (dispatch, getState) => {
@@ -51,10 +55,14 @@ export const updateNote = (note, justRename) => async (dispatch, getState) => {
 };
 */
 
-export const renameNote = (oldNote, updatedNote) => ({
-  type: RENAME_NOTE,
-  payload: { oldNote: oldNote, updatedNote: updatedNote }
-});
+export const renameNote = (oldNote, updatedNote) => {
+  const action = {
+    type: RENAME_NOTE,
+    payload: { oldNote: oldNote, updatedNote: updatedNote }
+  };
+  dropbox.enqueueAction(action);
+  return action;
+};
 
 export const setCurrentNoteId = noteId => ({
   type: SET_CURRENT_NOTE_ID,

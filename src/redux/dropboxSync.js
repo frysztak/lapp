@@ -1,14 +1,23 @@
 import { Dropbox } from "dropbox";
 import Cookies from "js-cookie";
 import { env as Env } from "../Env";
-import { setDropboxSyncEnabled } from "./actions";
+import { setDropboxSyncEnabled, setNoteSyncStatus } from "./actions";
 import { NoteStatus } from "../constants";
+import { reduceReduxActions } from "./dropboxActionReducer";
+import { DBX_RENAME } from "./dropboxActions";
 
 export default class DropboxSync {
   constructor(remoteFiles = [], localFiles = [], fetch = window.fetch) {
     this.dropbox = new Dropbox({ fetch: fetch });
+    this.store = null;
     this.remoteFiles = remoteFiles;
     this.localFiles = localFiles;
+    this.actionQueue = [];
+
+    this.dispatchTimeout = 1000;
+    this.timeoutID = 0;
+
+    this.dispatchActions = this.dispatchActions.bind(this);
   }
 
   attach(store) {
@@ -54,10 +63,23 @@ export default class DropboxSync {
       });
   }
 
-  enqueueChange(change) {}
+  enqueueAction(reduxAction) {
+    clearTimeout(this.timeoutID);
+    this.actionQueue.push(reduxAction);
+    console.log("enqueueing  action");
+    this.timeoutID = setTimeout(this.dispatchActions, this.dispatchTimeout);
+  }
 
-  getLocalFileList() {
-    return this.notes.map(note => this.convertNoteToFile(note));
+  async dispatchActions() {
+    const dropboxActions = reduceReduxActions(this.actionQueue);
+    this.actionQueue = [];
+    console.log("dispatching dbx actions");
+
+    for (const action of dropboxActions) {
+      if (action.type === DBX_RENAME) {
+        await this.renameNote(action);
+      }
+    }
   }
 
   async updateNote(note) {
@@ -76,26 +98,19 @@ export default class DropboxSync {
     }
   }
 
-  async renameNote(oldNote, newNote) {
+  async renameNote(action) {
+    const noteId = action.noteId;
+    this.store.dispatch(setNoteSyncStatus(noteId, NoteStatus.IN_PROGRESS));
+
     try {
       await this.dropbox.filesMoveV2({
-        from_path: `/${oldNote.name}.md`,
-        to_path: `/${newNote.name}.md`
+        from_path: `/${action.from}.md`,
+        to_path: `/${action.to}.md`
       });
-      return true;
+      this.store.dispatch(setNoteSyncStatus(noteId, NoteStatus.OK));
     } catch (err) {
-      if (err.error.error_summary === "from_lookup/not_found/..") {
-        try {
-          await this.updateNote(newNote);
-          return true;
-        } catch (errr) {
-          console.log(errr);
-          return false;
-        }
-      }
-
       console.log(err);
-      return false;
+      this.store.dispatch(setNoteSyncStatus(noteId, NoteStatus.ERROR));
     }
   }
 

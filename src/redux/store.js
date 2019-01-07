@@ -18,7 +18,7 @@ const store = createStore(
 );
 
 export const dropbox = new DropboxSync();
-dropbox.attach(store);
+//dropbox.attach(store);
 
 store.subscribe(
   throttle(() => {

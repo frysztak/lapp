@@ -8,11 +8,8 @@ import {
   LOCAL_RENAME
 } from "./dropboxActions";
 
-const convertDateTimeToDropboxFormat = datetime => {
-  return (
-    moment.utc(datetime, moment.ISO_8601).format("YYYY-MM-DDTHH:mm:ss") + "Z"
-  );
-};
+const convertDateTimeToDropboxFormat = datetime =>
+  moment.utc(datetime, moment.ISO_8601).format("YYYY-MM-DDTHH:mm:ss") + "Z";
 
 export const convertNoteToFile = note => {
   const markdown = fromDelta(note.text.ops);
@@ -57,9 +54,27 @@ const detectRenames = (setA, setB, setNoteId = false) => {
 };
 
 export const calculateDiff = (remoteFiles, localFiles) => {
-  const toDownload = remoteFiles.filter(
-    f => !localFiles.find(l => compareFiles(f, l))
-  );
+  const toDownload = remoteFiles
+    .map(remote => {
+      const localSameHash = localFiles.find(
+        l => remote.content_hash === l.content_hash
+      );
+      if (localSameHash) return undefined;
+
+      const localSameName = localFiles.find(l => remote.name === l.name);
+      if (localSameName) {
+        const isOlder = remote.server_modified > localSameName.server_modified;
+        if (isOlder) {
+          return {
+            ...remote,
+            noteId: localSameName.noteId
+          };
+        }
+      }
+
+      return remote;
+    })
+    .filter(x => x);
 
   const toUpload = localFiles.filter(
     f => !remoteFiles.find(l => compareFiles(f, l))

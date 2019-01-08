@@ -7,7 +7,7 @@ import {
   addNewNote,
   renameNote
 } from "./actions";
-import { NoteStatus } from "../constants";
+import { NoteStatus, SOURCE_DROPBOX } from "../constants";
 import { reduceReduxActions } from "./dropboxActionReducer";
 import {
   DBX_RENAME,
@@ -197,7 +197,7 @@ export default class DropboxSync {
 
     const oldNote = { id: noteId, name: action.oldName.replace(".md", "") };
     const newNote = { id: noteId, name: action.newName.replace(".md", "") };
-    this.store.dispatch(renameNote(oldNote, newNote));
+    this.store.dispatch(renameNote(oldNote, newNote, SOURCE_DROPBOX));
   }
 
   async beginDropboxSync() {

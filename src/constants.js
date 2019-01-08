@@ -19,3 +19,6 @@ export const NoteStatus = {
   OK: "OK",
   ERROR: "ERROR"
 };
+
+export const SOURCE_USER = "SOURCE_USER";
+export const SOURCE_DROPBOX = "SOURCE_DROPBOX";

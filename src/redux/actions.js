@@ -18,19 +18,22 @@ import {
   RENAME_NOTE
 } from "./actionTypes";
 import { dropbox } from "./store";
-import { NoteStatus } from "../constants";
+import { NoteStatus, SOURCE_USER } from "../constants";
 
 export const addNewNote = note => ({
   type: ADD_NEW_NOTE,
   payload: { note: note }
 });
 
-export const updateNote = (oldNote, updatedNote) => {
+export const updateNote = (oldNote, updatedNote, source = SOURCE_USER) => {
   const action = {
     type: UPDATE_NOTE,
-    payload: { oldNote: oldNote, updatedNote: updatedNote }
+    payload: { oldNote: oldNote, updatedNote: updatedNote, source: source }
   };
-  dropbox.enqueueAction(action);
+
+  if (source === SOURCE_USER) {
+    dropbox.enqueueAction(action);
+  }
   return action;
 };
 
@@ -55,12 +58,15 @@ export const updateNote = (note, justRename) => async (dispatch, getState) => {
 };
 */
 
-export const renameNote = (oldNote, updatedNote) => {
+export const renameNote = (oldNote, updatedNote, source = SOURCE_USER) => {
   const action = {
     type: RENAME_NOTE,
-    payload: { oldNote: oldNote, updatedNote: updatedNote }
+    payload: { oldNote: oldNote, updatedNote: updatedNote, source: source }
   };
-  dropbox.enqueueAction(action);
+
+  if (source === SOURCE_USER) {
+    dropbox.enqueueAction(action);
+  }
   return action;
 };
 

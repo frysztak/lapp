@@ -21,12 +21,25 @@ export default function(state = initialState, action) {
       return { ...state, all: [...state.all, note] };
     }
 
-    case RENAME_NOTE:
     case UPDATE_NOTE: {
       const { oldNote, updatedNote } = action.payload;
       return {
         ...state,
         all: state.all.map(n => (n.id === updatedNote.id ? updatedNote : n))
+      };
+    }
+
+    case RENAME_NOTE: {
+      const { oldNote, updatedNote } = action.payload;
+      return {
+        ...state,
+        all: state.all.map(n => {
+          if (n.id === oldNote.id) {
+            return { ...n, name: updatedNote.name };
+          } else {
+            return n;
+          }
+        })
       };
     }
 

@@ -75,7 +75,14 @@ export default class DropboxSync {
     const diff = calculateDiff(remoteFiles, localFiles);
     const actions = convertDiffToActions(diff);
     console.log(diff);
+    this.setStatusForUpToDateFiles(diff.upToDate);
     await this.performSyncActions(actions);
+  }
+
+  setStatusForUpToDateFiles(upToDate) {
+    for (const file of upToDate) {
+      this.store.dispatch(setNoteSyncStatus(file.noteId, NoteStatus.OK));
+    }
   }
 
   enqueueAction(reduxAction) {

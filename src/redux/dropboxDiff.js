@@ -70,6 +70,17 @@ const detectTransfers = (setA, setB) => {
     .filter(x => x); // removes undefines
 };
 
+const getUpToDateLocalFiles = (diff, localFiles) => {
+  let upToDate = localFiles;
+  upToDate = upToDate.filter(
+    f => !diff.toDownload.find(l => f.name === l.name)
+  );
+
+  upToDate = upToDate.filter(f => !diff.toUpload.find(l => f.name === l.name));
+
+  return upToDate;
+};
+
 export const calculateDiff = (remoteFiles, localFiles) => {
   const toDownload = detectTransfers(remoteFiles, localFiles);
   const toUpload = detectTransfers(localFiles, remoteFiles);
@@ -77,12 +88,15 @@ export const calculateDiff = (remoteFiles, localFiles) => {
   const toRenameLocal = detectRenames(remoteFiles, localFiles, true);
   const toRenameRemote = detectRenames(localFiles, remoteFiles);
 
-  return {
+  const diff = {
     toDownload: toDownload,
     toUpload: toUpload,
     toRenameLocal: toRenameLocal,
     toRenameRemote: toRenameRemote
   };
+
+  const upToDate = getUpToDateLocalFiles(diff, localFiles);
+  return { ...diff, upToDate: upToDate };
 };
 
 export const convertDiffToActions = diff => {

@@ -53,32 +53,26 @@ const detectRenames = (setA, setB, setNoteId = false) => {
     .filter(x => x); // removes undefines
 };
 
-export const calculateDiff = (remoteFiles, localFiles) => {
-  const toDownload = remoteFiles
-    .map(remote => {
-      const localSameHash = localFiles.find(
-        l => remote.content_hash === l.content_hash
-      );
-      if (localSameHash) return undefined;
+const detectTransfers = (setA, setB) => {
+  return setA
+    .map(noteA => {
+      const sameHash = setB.find(l => noteA.content_hash === l.content_hash);
+      if (sameHash) return undefined;
 
-      const localSameName = localFiles.find(l => remote.name === l.name);
-      if (localSameName) {
-        const isOlder = remote.server_modified > localSameName.server_modified;
-        if (isOlder) {
-          return {
-            ...remote,
-            noteId: localSameName.noteId
-          };
-        }
+      const sameName = setB.find(l => noteA.name === l.name);
+      if (sameName) {
+        const isOlder = noteA.server_modified > sameName.server_modified;
+        return isOlder ? { ...noteA, noteId: sameName.noteId } : undefined;
       }
 
-      return remote;
+      return noteA;
     })
-    .filter(x => x);
+    .filter(x => x); // removes undefines
+};
 
-  const toUpload = localFiles.filter(
-    f => !remoteFiles.find(l => compareFiles(f, l))
-  );
+export const calculateDiff = (remoteFiles, localFiles) => {
+  const toDownload = detectTransfers(remoteFiles, localFiles);
+  const toUpload = detectTransfers(localFiles, remoteFiles);
 
   const toRenameLocal = detectRenames(remoteFiles, localFiles, true);
   const toRenameRemote = detectRenames(localFiles, remoteFiles);

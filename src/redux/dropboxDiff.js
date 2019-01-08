@@ -40,8 +40,7 @@ const detectRenames = (setA, setB) => {
       if (!noteB) return undefined;
       if (
         noteA.name !== noteB.name &&
-        (noteA.client_modified > noteB.client_modified ||
-          noteA.server_modified > noteB.server_modified)
+        noteA.server_modified > noteB.server_modified
       ) {
         const id = noteA.id.includes("id:") ? noteB.id : noteA.id;
         return {

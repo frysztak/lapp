@@ -38,7 +38,7 @@ export default class DropboxSync {
     this.dispatchTimeout = 1000;
     this.timeoutID = 0;
 
-    this.dispatchActions = this.dispatchQueuedActions.bind(this);
+    this.dispatchQueuedActions = this.dispatchQueuedActions.bind(this);
   }
 
   attach(store) {
@@ -118,12 +118,16 @@ export default class DropboxSync {
       switch (action.type) {
         case DBX_RENAME:
           await this.renameNote(action);
+          break;
         case DBX_UPLOAD:
           await this.uploadNote(action);
+          break;
         case DBX_DOWNLOAD:
           await this.downloadNote(action);
+          break;
         case LOCAL_RENAME:
           this.renameLocalNote(action);
+          break;
       }
     }
   }

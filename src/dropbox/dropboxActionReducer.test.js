@@ -4,7 +4,7 @@ import {
   reduceDropboxActions,
   reduceReduxActions
 } from "./dropboxActionReducer";
-import { UPDATE_NOTE, RENAME_NOTE } from "./actionTypes";
+import { UPDATE_NOTE, RENAME_NOTE } from "../redux/actionTypes";
 import { DBX_RENAME, DBX_UPLOAD } from "./dropboxActions";
 
 describe("Splitting into chunks", () => {

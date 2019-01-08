@@ -8,7 +8,7 @@ import {
   renameNote,
   updateNote,
   setCurrentNoteId
-} from "./actions";
+} from "../redux/actions";
 import { NoteStatus, SOURCE_DROPBOX } from "../constants";
 import { reduceReduxActions } from "./dropboxActionReducer";
 import {
@@ -22,7 +22,7 @@ import {
   calculateDiff,
   convertDiffToActions
 } from "./dropboxDiff";
-import { blob2string } from "./utils";
+import { blob2string } from "../redux/utils";
 import Note from "../Note";
 import { toDelta } from "quill-delta-markdown";
 import uuidv1 from "uuid/v1";

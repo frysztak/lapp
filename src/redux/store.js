@@ -3,7 +3,7 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import rootReducer from "./reducers";
 import { loadState, saveState } from "./localStorage";
 import throttle from "lodash/throttle";
-import DropboxSync from "./dropboxSync";
+import DropboxSync from "../dropbox/dropboxSync";
 import thunk from "redux-thunk";
 
 const persistedState = loadState();

@@ -1,4 +1,4 @@
-import { UPDATE_NOTE, RENAME_NOTE } from "./actionTypes";
+import { UPDATE_NOTE, RENAME_NOTE } from "../redux/actionTypes";
 import { DBX_RENAME, DBX_UPLOAD } from "./dropboxActions";
 
 const sameContent = (actionA, actionB) =>

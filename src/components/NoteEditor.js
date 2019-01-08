@@ -176,8 +176,8 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-NoteEditor.PropTypes = {
-  currentNote: PropTypes.object.isRequired,
+NoteEditor.propTypes = {
+  currentNote: PropTypes.object,
   onNoteChanged: PropTypes.func.isRequired,
   showDeletionModal: PropTypes.bool.isRequired,
   toggleNoteDeletionModal: PropTypes.func.isRequired,

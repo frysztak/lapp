@@ -95,7 +95,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-App.PropTypes = {
+App.propTypes = {
   showSidebar: PropTypes.bool.isRequired,
   hidePopups: PropTypes.func.isRequired
 };

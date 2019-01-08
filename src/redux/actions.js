@@ -18,7 +18,7 @@ import {
   RENAME_NOTE
 } from "./actionTypes";
 import { dropbox } from "./store";
-import { NoteStatus, SOURCE_USER } from "../constants";
+import { SOURCE_USER } from "../constants";
 
 export const addNewNote = note => ({
   type: ADD_NEW_NOTE,
@@ -36,27 +36,6 @@ export const updateNote = (oldNote, updatedNote, source = SOURCE_USER) => {
   }
   return action;
 };
-
-/*
-export const updateNote = (note, justRename) => async (dispatch, getState) => {
-  dispatch(setNoteSyncStatus(note.id, NoteStatus.IN_PROGRESS));
-
-  let success = false;
-  if (justRename) {
-    const oldNote = getState().notes.all.find(n => n.id === note.id);
-    success = await dropbox.renameNote(oldNote, note);
-  } else {
-    success = await dropbox.updateNote(note);
-  }
-  const status = success ? NoteStatus.OK : NoteStatus.ERROR;
-
-  dispatch({
-    type: UPDATE_NOTE,
-    payload: { note: note, justRename: justRename }
-  });
-  dispatch(setNoteSyncStatus(note.id, status));
-};
-*/
 
 export const renameNote = (oldNote, updatedNote, source = SOURCE_USER) => {
   const action = {

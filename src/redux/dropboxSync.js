@@ -30,11 +30,9 @@ import * as Delta from "quill-delta";
 import moment from "moment";
 
 export default class DropboxSync {
-  constructor(remoteFiles = [], localFiles = [], fetch = window.fetch) {
+  constructor(fetch = window.fetch) {
     this.dropbox = new Dropbox({ fetch: fetch });
     this.store = null;
-    this.remoteFiles = remoteFiles;
-    this.localFiles = localFiles;
     this.actionQueue = [];
 
     this.dispatchTimeout = 1000;
@@ -83,7 +81,6 @@ export default class DropboxSync {
   enqueueAction(reduxAction) {
     clearTimeout(this.timeoutID);
     this.actionQueue.push(reduxAction);
-    console.log("enqueueing  action");
     this.timeoutID = setTimeout(
       this.dispatchQueuedActions,
       this.dispatchTimeout
@@ -110,8 +107,6 @@ export default class DropboxSync {
   dispatchQueuedActions() {
     const dropboxActions = reduceReduxActions(this.actionQueue);
     this.actionQueue = [];
-    console.log("dispatching dbx actions");
-
     this.performSyncActions(dropboxActions);
   }
 
@@ -129,6 +124,8 @@ export default class DropboxSync {
           break;
         case LOCAL_RENAME:
           this.renameLocalNote(action);
+          break;
+        default:
           break;
       }
     }
@@ -223,63 +220,5 @@ export default class DropboxSync {
       this.store.dispatch(setCurrentNoteId(newNote.id));
     }
     this.store.dispatch(setNoteSyncStatus(newNote.id, NoteStatus.OK));
-  }
-
-  async beginDropboxSync() {
-    const dbxFilesResponse = await this.dropbox.filesListFolder({ path: "" });
-    if (dbxFilesResponse.has_more) {
-      throw Error("has_more");
-    }
-
-    const dbxFiles = dbxFilesResponse.entries.filter(file =>
-      file.name.endsWith(".md")
-    );
-    const localFiles = this.getLocalFileList();
-
-    const filesToDownload = dbxFiles.filter(remoteFile => {
-      const localIdx = localFiles.findIndex(
-        localFile => localFile.name === remoteFile.name
-      );
-      if (localIdx === -1) return true;
-
-      if (remoteFile.last_modified > localFiles[localIdx].last_modified)
-        return true;
-
-      return false;
-    });
-
-    const filesToUpload = localFiles.filter(localFile => {
-      const remoteIdx = dbxFiles.findIndex(
-        remoteFile => remoteFile.name === localFile.name
-      );
-      if (remoteIdx === -1) return true;
-
-      if (dbxFiles[remoteIdx].last_modified > localFile.last_modified)
-        return true;
-
-      return false;
-    });
-
-    console.log(dbxFilesResponse);
-    console.log(dbxFiles);
-    console.log(localFiles);
-    console.log(filesToDownload);
-    console.log(filesToUpload);
-
-    await this.uploadFiles(filesToUpload);
-  }
-
-  async uploadFiles(localFiles) {
-    for (const file of localFiles) {
-      this.updateNoteSyncStatus(file.id, NoteStatus.IN_PROGRESS);
-
-      await this.dropbox.filesUpload({
-        contents: file.content,
-        path: `/${file.name}`,
-        client_modified: file.last_modified
-      });
-
-      this.updateNoteSyncStatus(file.id, NoteStatus.OK);
-    }
   }
 }

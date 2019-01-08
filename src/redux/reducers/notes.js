@@ -25,7 +25,7 @@ export default function(state = initialState, action) {
       const { oldNote, updatedNote } = action.payload;
       return {
         ...state,
-        all: state.all.map(n => (n.id === updatedNote.id ? updatedNote : n))
+        all: state.all.map(n => (n.id === oldNote.id ? updatedNote : n))
       };
     }
 
@@ -35,7 +35,7 @@ export default function(state = initialState, action) {
         ...state,
         all: state.all.map(n => {
           if (n.id === oldNote.id) {
-            return { ...n, name: updatedNote.name };
+            return { ...n, id: updatedNote.id, name: updatedNote.name };
           } else {
             return n;
           }

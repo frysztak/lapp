@@ -6,7 +6,8 @@ import {
   setNoteSyncStatus,
   addNewNote,
   renameNote,
-  updateNote
+  updateNote,
+  setCurrentNoteId
 } from "./actions";
 import { NoteStatus, SOURCE_DROPBOX } from "../constants";
 import { reduceReduxActions } from "./dropboxActionReducer";
@@ -152,10 +153,10 @@ export default class DropboxSync {
   }
 
   async downloadNote(action) {
-    const buildNewNote = (content, noteId) => {
+    const buildNewNote = content => {
       const quillOps = toDelta(content);
       const quillDelta = new Delta(quillOps);
-      const id = noteId || uuidv1();
+      const id = uuidv1();
       const name = action.filename.replace(".md", "");
       const date = moment(action.client_modified).toISOString();
       return new Note(id, name, quillDelta, date);
@@ -167,15 +168,22 @@ export default class DropboxSync {
       });
 
       const content = await blob2string(response.fileBlob);
-
+      const currentNoteId = this.store.getState().notes.currentNoteId;
       let note;
+
       if (action.noteId) {
-        note = buildNewNote(content, action.noteId);
+        note = buildNewNote(content);
         const fakeOldNote = { id: action.noteId };
         this.store.dispatch(updateNote(fakeOldNote, note, SOURCE_DROPBOX));
+        if (currentNoteId === fakeOldNote.id) {
+          this.store.dispatch(setCurrentNoteId(note.id));
+        }
       } else {
         note = buildNewNote(content);
         this.store.dispatch(addNewNote(note));
+        if (!currentNoteId) {
+          this.store.dispatch(setCurrentNoteId(note.id));
+        }
       }
 
       this.store.dispatch(setNoteSyncStatus(note.id, NoteStatus.OK));
@@ -201,14 +209,20 @@ export default class DropboxSync {
   }
 
   renameLocalNote(action) {
-    const noteId = action.id;
+    const noteId = action.noteId;
     if (!noteId) {
       throw new Error("noteId unknown, unable to rename local note");
     }
 
     const oldNote = { id: noteId, name: action.oldName.replace(".md", "") };
-    const newNote = { id: noteId, name: action.newName.replace(".md", "") };
+    const newNote = { id: uuidv1(), name: action.newName.replace(".md", "") };
     this.store.dispatch(renameNote(oldNote, newNote, SOURCE_DROPBOX));
+
+    const currentNoteId = this.store.getState().notes.currentNoteId;
+    if (currentNoteId === noteId) {
+      this.store.dispatch(setCurrentNoteId(newNote.id));
+    }
+    this.store.dispatch(setNoteSyncStatus(newNote.id, NoteStatus.OK));
   }
 
   async beginDropboxSync() {

@@ -1,9 +1,8 @@
 import { UPDATE_NOTE, RENAME_NOTE } from "./actionTypes";
 import { DBX_RENAME, DBX_UPLOAD } from "./dropboxActions";
 
-const sameHash = (actionA, actionB) =>
-  actionA.payload.updatedNote.content_hash ===
-  actionB.payload.oldNote.content_hash;
+const sameContent = (actionA, actionB) =>
+  actionA.payload.updatedNote.text === actionB.payload.oldNote.text;
 const sameName = (actionA, actionB) =>
   actionA.payload.updatedNote.name === actionB.payload.oldNote.name;
 const bothUpdate = (actionA, actionB) =>
@@ -14,7 +13,7 @@ const bothRename = (actionA, actionB) =>
 const compareActions = (actionA, actionB) => {
   if (
     bothRename(actionA, actionB) &&
-    sameHash(actionA, actionB) &&
+    sameContent(actionA, actionB) &&
     !sameName(actionA, actionB)
   ) {
     // rename
@@ -22,7 +21,7 @@ const compareActions = (actionA, actionB) => {
   } else if (
     bothUpdate(actionA, actionB) &&
     sameName(actionA, actionB) &&
-    !sameHash(actionA, actionB)
+    !sameContent(actionA, actionB)
   ) {
     // content update
     return true;

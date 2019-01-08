@@ -5,7 +5,8 @@ import {
   setDropboxSyncEnabled,
   setNoteSyncStatus,
   addNewNote,
-  renameNote
+  renameNote,
+  updateNote
 } from "./actions";
 import { NoteStatus, SOURCE_DROPBOX } from "../constants";
 import { reduceReduxActions } from "./dropboxActionReducer";
@@ -105,12 +106,12 @@ export default class DropboxSync {
     return this.store.getState().notes.all.map(note => convertNoteToFile(note));
   }
 
-  async dispatchQueuedActions() {
+  dispatchQueuedActions() {
     const dropboxActions = reduceReduxActions(this.actionQueue);
     this.actionQueue = [];
     console.log("dispatching dbx actions");
 
-    await this.performSyncActions(dropboxActions);
+    this.performSyncActions(dropboxActions);
   }
 
   async performSyncActions(syncActions) {
@@ -133,27 +134,28 @@ export default class DropboxSync {
   }
 
   async uploadNote(action) {
-    const file = action.note;
+    const file = action.note ? convertNoteToFile(action.note) : action.file;
 
-    this.store.dispatch(setNoteSyncStatus(file.id, NoteStatus.IN_PROGRESS));
+    this.store.dispatch(setNoteSyncStatus(file.noteId, NoteStatus.IN_PROGRESS));
     try {
       await this.dropbox.filesUpload({
         contents: file.content,
         path: `/${file.name}`,
-        client_modified: file.client_modified
+        client_modified: file.client_modified,
+        mode: "overwrite"
       });
-      this.store.dispatch(setNoteSyncStatus(file.id, NoteStatus.OK));
+      this.store.dispatch(setNoteSyncStatus(file.noteId, NoteStatus.OK));
     } catch (err) {
       console.log(err);
-      this.store.dispatch(setNoteSyncStatus(file.id, NoteStatus.ERROR));
+      this.store.dispatch(setNoteSyncStatus(file.noteId, NoteStatus.ERROR));
     }
   }
 
   async downloadNote(action) {
-    const buildNewNote = content => {
+    const buildNewNote = (content, noteId) => {
       const quillOps = toDelta(content);
       const quillDelta = new Delta(quillOps);
-      const id = uuidv1();
+      const id = noteId || uuidv1();
       const name = action.filename.replace(".md", "");
       const date = moment(action.client_modified).toISOString();
       return new Note(id, name, quillDelta, date);
@@ -165,8 +167,17 @@ export default class DropboxSync {
       });
 
       const content = await blob2string(response.fileBlob);
-      const note = buildNewNote(content);
-      this.store.dispatch(addNewNote(note));
+
+      let note;
+      if (action.noteId) {
+        note = buildNewNote(content, action.noteId);
+        const fakeOldNote = { id: action.noteId };
+        this.store.dispatch(updateNote(fakeOldNote, note, SOURCE_DROPBOX));
+      } else {
+        note = buildNewNote(content);
+        this.store.dispatch(addNewNote(note));
+      }
+
       this.store.dispatch(setNoteSyncStatus(note.id, NoteStatus.OK));
     } catch (err) {
       console.log(err);

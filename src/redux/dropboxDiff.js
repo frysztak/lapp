@@ -22,7 +22,7 @@ export const convertNoteToFile = note => {
 
   return {
     name: `${note.name}.md`,
-    id: note.id,
+    noteId: note.id,
     client_modified: date,
     server_modified: date,
     content: markdown,
@@ -33,7 +33,7 @@ export const convertNoteToFile = note => {
 const compareFiles = (noteA, noteB) =>
   noteA.content_hash === noteB.content_hash;
 
-const detectRenames = (setA, setB) => {
+const detectRenames = (setA, setB, setNoteId = false) => {
   return setA
     .map(noteA => {
       const noteB = setB.find(l => compareFiles(noteA, l));
@@ -42,12 +42,14 @@ const detectRenames = (setA, setB) => {
         noteA.name !== noteB.name &&
         noteA.server_modified > noteB.server_modified
       ) {
-        const id = noteA.id.includes("id:") ? noteB.id : noteA.id;
-        return {
-          id: id,
+        const action = {
           oldName: noteB.name,
           newName: noteA.name
         };
+        const noteId = noteA.noteId ? noteA.noteId : noteB.noteId;
+        if (noteId && setNoteId) action.noteId = noteId;
+
+        return action;
       }
       return undefined;
     })
@@ -63,7 +65,7 @@ export const calculateDiff = (remoteFiles, localFiles) => {
     f => !remoteFiles.find(l => compareFiles(f, l))
   );
 
-  const toRenameLocal = detectRenames(remoteFiles, localFiles);
+  const toRenameLocal = detectRenames(remoteFiles, localFiles, true);
   const toRenameRemote = detectRenames(localFiles, remoteFiles);
 
   return {
@@ -79,12 +81,12 @@ export const convertDiffToActions = diff => {
     type: DBX_DOWNLOAD,
     filename: file.name,
     client_modified: file.client_modified,
-    newFile: true
+    noteId: file.noteId
   }));
 
-  const uploads = diff.toUpload.map(note => ({
+  const uploads = diff.toUpload.map(file => ({
     type: DBX_UPLOAD,
-    note: note
+    file: file
   }));
 
   const remoteRenames = diff.toRenameRemote.map(file => ({
@@ -95,7 +97,7 @@ export const convertDiffToActions = diff => {
 
   const localRenames = diff.toRenameLocal.map(file => ({
     type: LOCAL_RENAME,
-    id: file.id,
+    noteId: file.noteId,
     oldName: file.oldName,
     newName: file.newName
   }));

@@ -13,22 +13,22 @@ describe("Splitting into chunks", () => {
       {
         type: RENAME_NOTE,
         payload: {
-          oldNote: { name: "smth", content_hash: "hashA" },
-          updatedNote: { name: "A", content_hash: "hashA" }
+          oldNote: { name: "smth", text: "contentA" },
+          updatedNote: { name: "A", text: "contentA" }
         }
       },
       {
         type: UPDATE_NOTE,
         payload: {
-          oldNote: { name: "B", content_hash: "hashB-" },
-          updatedNote: { name: "B", content_hash: "hashB" }
+          oldNote: { name: "B", text: "contentB-" },
+          updatedNote: { name: "B", text: "contentB" }
         }
       },
       {
         type: RENAME_NOTE,
         payload: {
-          oldNote: { name: "C-", content_hash: "hashC" },
-          updatedNote: { name: "C", content_hash: "hashC" }
+          oldNote: { name: "C-", text: "contentC" },
+          updatedNote: { name: "C", text: "contentC" }
         }
       }
     ];
@@ -42,36 +42,36 @@ describe("Splitting into chunks", () => {
       {
         type: RENAME_NOTE,
         payload: {
-          oldNote: { name: "A-", content_hash: "hashA" },
-          updatedNote: { name: "A", content_hash: "hashA" }
+          oldNote: { name: "A-", text: "contentA" },
+          updatedNote: { name: "A", text: "contentA" }
         }
       },
       {
         type: RENAME_NOTE,
         payload: {
-          oldNote: { name: "A", content_hash: "hashA" },
-          updatedNote: { name: "B", content_hash: "hashA" }
+          oldNote: { name: "A", text: "contentA" },
+          updatedNote: { name: "B", text: "contentA" }
         }
       },
       {
         type: UPDATE_NOTE,
         payload: {
-          oldNote: { name: "C", content_hash: "hashC-" },
-          updatedNote: { name: "C", content_hash: "hashC" }
+          oldNote: { name: "C", text: "contentC-" },
+          updatedNote: { name: "C", text: "contentC" }
         }
       },
       {
         type: RENAME_NOTE,
         payload: {
-          oldNote: { name: "D-", content_hash: "hashD" },
-          updatedNote: { name: "D", content_hash: "hashD" }
+          oldNote: { name: "D-", text: "contentD" },
+          updatedNote: { name: "D", text: "contentD" }
         }
       },
       {
         type: RENAME_NOTE,
         payload: {
-          oldNote: { name: "D", content_hash: "hashD" },
-          updatedNote: { name: "E", content_hash: "hashD" }
+          oldNote: { name: "D", text: "contentD" },
+          updatedNote: { name: "E", text: "contentD" }
         }
       }
     ];
@@ -89,36 +89,36 @@ describe("Splitting into chunks", () => {
       {
         type: UPDATE_NOTE,
         payload: {
-          oldNote: { name: "A", content_hash: "hashA-" },
-          updatedNote: { name: "A", content_hash: "hashA" }
+          oldNote: { name: "A", text: "contentA-" },
+          updatedNote: { name: "A", text: "contentA" }
         }
       },
       {
         type: UPDATE_NOTE,
         payload: {
-          oldNote: { name: "A", content_hash: "hashA" },
-          updatedNote: { name: "A", content_hash: "hashB" }
+          oldNote: { name: "A", text: "contentA" },
+          updatedNote: { name: "A", text: "contentB" }
         }
       },
       {
         type: UPDATE_NOTE,
         payload: {
-          oldNote: { name: "C", content_hash: "hashC-" },
-          updatedNote: { name: "C", content_hash: "hashC" }
+          oldNote: { name: "C", text: "contentC-" },
+          updatedNote: { name: "C", text: "contentC" }
         }
       },
       {
         type: UPDATE_NOTE,
         payload: {
-          oldNote: { name: "D", content_hash: "hashD-" },
-          updatedNote: { name: "D", content_hash: "hashD" }
+          oldNote: { name: "D", text: "contentD-" },
+          updatedNote: { name: "D", text: "contentD" }
         }
       },
       {
         type: UPDATE_NOTE,
         payload: {
-          oldNote: { name: "D", content_hash: "hashD" },
-          updatedNote: { name: "D", content_hash: "hashE" }
+          oldNote: { name: "D", text: "contentD" },
+          updatedNote: { name: "D", text: "contentE" }
         }
       }
     ];
@@ -136,36 +136,36 @@ describe("Splitting into chunks", () => {
       {
         type: RENAME_NOTE,
         payload: {
-          oldNote: { name: "A-", content_hash: "hashA" },
-          updatedNote: { name: "A", content_hash: "hashA" }
+          oldNote: { name: "A-", text: "contentA" },
+          updatedNote: { name: "A", text: "contentA" }
         }
       },
       {
         type: RENAME_NOTE,
         payload: {
-          oldNote: { name: "A", content_hash: "hashA" },
-          updatedNote: { name: "Aa", content_hash: "hashA" }
+          oldNote: { name: "A", text: "contentA" },
+          updatedNote: { name: "Aa", text: "contentA" }
         }
       },
       {
         type: RENAME_NOTE,
         payload: {
-          oldNote: { name: "Aa", content_hash: "hashA" },
-          updatedNote: { name: "Aaa", content_hash: "hashA" }
+          oldNote: { name: "Aa", text: "contentA" },
+          updatedNote: { name: "Aaa", text: "contentA" }
         }
       },
       {
         type: UPDATE_NOTE,
         payload: {
-          oldNote: { name: "Aaa", content_hash: "hashA" },
-          updatedNote: { name: "Aaa", content_hash: "hashB" }
+          oldNote: { name: "Aaa", text: "contentA" },
+          updatedNote: { name: "Aaa", text: "contentB" }
         }
       },
       {
         type: UPDATE_NOTE,
         payload: {
-          oldNote: { name: "Aaa", content_hash: "hashB" },
-          updatedNote: { name: "Aaa", content_hash: "hashC" }
+          oldNote: { name: "Aaa", text: "contentB" },
+          updatedNote: { name: "Aaa", text: "contentC" }
         }
       }
     ];
@@ -245,22 +245,22 @@ describe("Reducing Redux actions", () => {
       {
         type: RENAME_NOTE,
         payload: {
-          oldNote: { name: "smth", content_hash: "hashA" },
-          updatedNote: { name: "A", content_hash: "hashA" }
+          oldNote: { name: "smth", text: "contentA" },
+          updatedNote: { name: "A", text: "contentA" }
         }
       },
       {
         type: RENAME_NOTE,
         payload: {
-          oldNote: { name: "A", content_hash: "hashA" },
-          updatedNote: { name: "B", content_hash: "hashA" }
+          oldNote: { name: "A", text: "contentA" },
+          updatedNote: { name: "B", text: "contentA" }
         }
       },
       {
         type: RENAME_NOTE,
         payload: {
-          oldNote: { name: "B", content_hash: "hashA" },
-          updatedNote: { name: "C", content_hash: "hashA" }
+          oldNote: { name: "B", text: "contentA" },
+          updatedNote: { name: "C", text: "contentA" }
         }
       }
     ];

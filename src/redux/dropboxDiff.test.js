@@ -49,7 +49,7 @@ it("Everything to upload and download", () => {
   const localFiles = [
     {
       name: "C",
-      id: "idC",
+      noteId: "idC",
       content_hash: "hashC",
       client_modified: new Date("2008-09-15T15:53:00"),
       server_modified: new Date("2008-09-15T15:53:00")
@@ -86,7 +86,7 @@ it("Download just one", () => {
   const localFiles = [
     {
       name: "A",
-      id: "idC",
+      noteId: "idC",
       content_hash: "hashA",
       client_modified: new Date("2008-09-15T15:50:00"),
       server_modified: new Date("2008-09-15T15:50:00")
@@ -123,7 +123,7 @@ it("Rename local file instead of downloading", () => {
   const localFiles = [
     {
       name: "C",
-      id: "idC",
+      noteId: "idC",
       content_hash: "hashA",
       client_modified: new Date("2008-09-15T15:50:00"),
       server_modified: new Date("2008-09-15T15:50:00")
@@ -138,7 +138,7 @@ it("Rename local file instead of downloading", () => {
   expect(toUpload).toEqual([]);
   expect(toRenameLocal).toEqual([
     {
-      id: "idC",
+      noteId: "idC",
       oldName: "C",
       newName: "A"
     }
@@ -166,7 +166,7 @@ it("Rename remote file instead of uploading", () => {
   const localFiles = [
     {
       name: "C",
-      id: "id:idC",
+      noteId: "idC",
       content_hash: "hashA",
       client_modified: new Date("2008-09-15T15:55:00"), // modified later than remote:A
       server_modified: new Date("2008-09-15T15:55:00")
@@ -182,7 +182,6 @@ it("Rename remote file instead of uploading", () => {
   expect(toRenameLocal).toEqual([]);
   expect(toRenameRemote).toEqual([
     {
-      id: "id:idA",
       oldName: "A",
       newName: "C"
     }
@@ -209,7 +208,7 @@ it("Rename local file, but remote file has been renamed through Dropbox Web UI",
   const localFiles = [
     {
       name: "C",
-      id: "idC",
+      noteId: "idC",
       content_hash: "hashA",
       client_modified: new Date("2008-09-15T15:50:00"),
       server_modified: new Date("2008-09-15T15:50:00")
@@ -224,7 +223,7 @@ it("Rename local file, but remote file has been renamed through Dropbox Web UI",
   expect(toUpload).toEqual([]);
   expect(toRenameLocal).toEqual([
     {
-      id: "idC",
+      noteId: "idC",
       oldName: "C",
       newName: "A"
     }

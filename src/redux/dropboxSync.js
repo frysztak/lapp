@@ -1,10 +1,31 @@
 import { Dropbox } from "dropbox";
 import Cookies from "js-cookie";
 import { env as Env } from "../Env";
-import { setDropboxSyncEnabled, setNoteSyncStatus } from "./actions";
+import {
+  setDropboxSyncEnabled,
+  setNoteSyncStatus,
+  addNewNote,
+  renameNote
+} from "./actions";
 import { NoteStatus } from "../constants";
 import { reduceReduxActions } from "./dropboxActionReducer";
-import { DBX_RENAME } from "./dropboxActions";
+import {
+  DBX_RENAME,
+  DBX_UPLOAD,
+  DBX_DOWNLOAD,
+  LOCAL_RENAME
+} from "./dropboxActions";
+import {
+  convertNoteToFile,
+  calculateDiff,
+  convertDiffToActions
+} from "./dropboxDiff";
+import { blob2string } from "./utils";
+import Note from "../Note";
+import { toDelta } from "quill-delta-markdown";
+import uuidv1 from "uuid/v1";
+import * as Delta from "quill-delta";
+import moment from "moment";
 
 export default class DropboxSync {
   constructor(remoteFiles = [], localFiles = [], fetch = window.fetch) {
@@ -17,14 +38,11 @@ export default class DropboxSync {
     this.dispatchTimeout = 1000;
     this.timeoutID = 0;
 
-    this.dispatchActions = this.dispatchActions.bind(this);
+    this.dispatchActions = this.dispatchQueuedActions.bind(this);
   }
 
   attach(store) {
     this.store = store;
-    this.localFiles = store
-      .getState()
-      .notes.all.map(note => this.convertNoteToFile(note));
 
     const accessToken = Cookies.get(Env.DropboxAccessTokenCookieName);
     if (accessToken) {
@@ -46,55 +64,108 @@ export default class DropboxSync {
   _setup(accessToken) {
     this.store.dispatch(setDropboxSyncEnabled(true));
     this.dropbox.setAccessToken(accessToken);
+  }
 
-    this.dropbox
-      .filesListFolder({ path: "" })
-      .then(response => {
-        if (response.has_more) {
-          throw Error("has_more not yet supported");
-        }
+  async hardSync() {
+    if (!this.dropbox.getAccessToken()) return;
 
-        this.remoteFiles = response.entries.filter(file =>
-          file.name.endsWith(".md")
-        );
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    const remoteFiles = await this.getRemoteFiles();
+    const localFiles = this.getLocalFiles();
+
+    const diff = calculateDiff(remoteFiles, localFiles);
+    const actions = convertDiffToActions(diff);
+    console.log(diff);
+    await this.performSyncActions(actions);
   }
 
   enqueueAction(reduxAction) {
     clearTimeout(this.timeoutID);
     this.actionQueue.push(reduxAction);
     console.log("enqueueing  action");
-    this.timeoutID = setTimeout(this.dispatchActions, this.dispatchTimeout);
+    this.timeoutID = setTimeout(
+      this.dispatchQueuedActions,
+      this.dispatchTimeout
+    );
   }
 
-  async dispatchActions() {
+  async getRemoteFiles() {
+    try {
+      const response = await this.dropbox.filesListFolder({ path: "" });
+      if (response.has_more) {
+        throw Error("has_more");
+      }
+
+      return response.entries.filter(file => file.name.endsWith(".md"));
+    } catch (err) {
+      return null;
+    }
+  }
+
+  getLocalFiles() {
+    return this.store.getState().notes.all.map(note => convertNoteToFile(note));
+  }
+
+  async dispatchQueuedActions() {
     const dropboxActions = reduceReduxActions(this.actionQueue);
     this.actionQueue = [];
     console.log("dispatching dbx actions");
 
-    for (const action of dropboxActions) {
-      if (action.type === DBX_RENAME) {
-        await this.renameNote(action);
+    await this.performSyncActions(dropboxActions);
+  }
+
+  async performSyncActions(syncActions) {
+    for (const action of syncActions) {
+      switch (action.type) {
+        case DBX_RENAME:
+          await this.renameNote(action);
+        case DBX_UPLOAD:
+          await this.uploadNote(action);
+        case DBX_DOWNLOAD:
+          await this.downloadNote(action);
+        case LOCAL_RENAME:
+          this.renameLocalNote(action);
       }
     }
   }
 
-  async updateNote(note) {
-    const file = this.convertNoteToFile(note);
+  async uploadNote(action) {
+    const file = action.note;
 
+    this.store.dispatch(setNoteSyncStatus(file.id, NoteStatus.IN_PROGRESS));
     try {
       await this.dropbox.filesUpload({
         contents: file.content,
         path: `/${file.name}`,
-        client_modified: file.last_modified
+        client_modified: file.client_modified
       });
-      return true;
+      this.store.dispatch(setNoteSyncStatus(file.id, NoteStatus.OK));
     } catch (err) {
       console.log(err);
-      return false;
+      this.store.dispatch(setNoteSyncStatus(file.id, NoteStatus.ERROR));
+    }
+  }
+
+  async downloadNote(action) {
+    const buildNewNote = content => {
+      const quillOps = toDelta(content);
+      const quillDelta = new Delta(quillOps);
+      const id = uuidv1();
+      const name = action.filename.replace(".md", "");
+      const date = moment(action.client_modified).toISOString();
+      return new Note(id, name, quillDelta, date);
+    };
+
+    try {
+      const response = await this.dropbox.filesDownload({
+        path: `/${action.filename}`
+      });
+
+      const content = await blob2string(response.fileBlob);
+      const note = buildNewNote(content);
+      this.store.dispatch(addNewNote(note));
+      this.store.dispatch(setNoteSyncStatus(note.id, NoteStatus.OK));
+    } catch (err) {
+      console.log(err);
     }
   }
 
@@ -112,6 +183,17 @@ export default class DropboxSync {
       console.log(err);
       this.store.dispatch(setNoteSyncStatus(noteId, NoteStatus.ERROR));
     }
+  }
+
+  renameLocalNote(action) {
+    const noteId = action.id;
+    if (!noteId) {
+      throw new Error("noteId unknown, unable to rename local note");
+    }
+
+    const oldNote = { id: noteId, name: action.oldName.replace(".md", "") };
+    const newNote = { id: noteId, name: action.newName.replace(".md", "") };
+    this.store.dispatch(renameNote(oldNote, newNote));
   }
 
   async beginDropboxSync() {

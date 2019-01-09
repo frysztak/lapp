@@ -3,7 +3,7 @@ import {
   UPDATE_NOTE,
   SET_CURRENT_NOTE_ID,
   TOGGLE_NOTE_DELETION_MODAL,
-  DELETE_CURRENT_NOTE,
+  DELETE_NOTE,
   SET_NEWEST_NOTE_AS_CURRENT,
   TOGGLE_FILTER_POPUP,
   HIDE_FILTER_POPUP,
@@ -49,6 +49,16 @@ export const renameNote = (oldNote, updatedNote, source = SOURCE_USER) => {
   return action;
 };
 
+export const deleteNote = note => {
+  const action = {
+    type: DELETE_NOTE,
+    payload: { note: note }
+  };
+
+  dropbox.enqueueAction(action);
+  return action;
+};
+
 export const setCurrentNoteId = noteId => ({
   type: SET_CURRENT_NOTE_ID,
   payload: { noteId: noteId }
@@ -60,10 +70,6 @@ export const setNewestNoteAsCurrent = () => ({
 
 export const toggleNoteDeletionModal = () => ({
   type: TOGGLE_NOTE_DELETION_MODAL
-});
-
-export const deleteCurrentNote = () => ({
-  type: DELETE_CURRENT_NOTE
 });
 
 export const toggleFilterPopup = () => ({

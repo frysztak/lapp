@@ -1,7 +1,7 @@
 import {
   ADD_NEW_NOTE,
   SET_CURRENT_NOTE_ID,
-  DELETE_CURRENT_NOTE,
+  DELETE_NOTE,
   SET_NEWEST_NOTE_AS_CURRENT,
   UPDATE_NOTE,
   RENAME_NOTE
@@ -54,10 +54,11 @@ export default function(state = initialState, action) {
       return { ...state, currentNoteId: newestNote.id };
     }
 
-    case DELETE_CURRENT_NOTE: {
+    case DELETE_NOTE: {
+      const { note } = action.payload;
       return {
         ...state,
-        all: state.all.filter(note => note.id !== state.currentNoteId)
+        all: state.all.filter(n => n.id !== note.id)
       };
     }
 

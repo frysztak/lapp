@@ -1,5 +1,5 @@
-import { UPDATE_NOTE, RENAME_NOTE } from "../redux/actionTypes";
-import { DBX_RENAME, DBX_UPLOAD } from "./dropboxActions";
+import { UPDATE_NOTE, RENAME_NOTE, DELETE_NOTE } from "../redux/actionTypes";
+import { DBX_RENAME, DBX_UPLOAD, DBX_DELETE } from "./dropboxActions";
 
 const sameContent = (actionA, actionB) =>
   actionA.payload.updatedNote.text === actionB.payload.oldNote.text;
@@ -44,6 +44,12 @@ export const convertToDropboxAction = reduxAction => {
     return {
       type: DBX_UPLOAD,
       note: updatedNote
+    };
+  } else if (reduxAction.type === DELETE_NOTE) {
+    const { note } = reduxAction.payload;
+    return {
+      type: DBX_DELETE,
+      note: note
     };
   }
 };

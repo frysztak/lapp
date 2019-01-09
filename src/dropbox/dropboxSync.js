@@ -15,7 +15,8 @@ import {
   DBX_RENAME,
   DBX_UPLOAD,
   DBX_DOWNLOAD,
-  LOCAL_RENAME
+  LOCAL_RENAME,
+  DBX_DELETE
 } from "./dropboxActions";
 import {
   convertNoteToFile,
@@ -136,6 +137,9 @@ export default class DropboxSync {
         case DBX_DOWNLOAD:
           await this.downloadNote(action);
           break;
+        case DBX_DELETE:
+          await this.deleteNote(action);
+          break;
         case LOCAL_RENAME:
           this.renameLocalNote(action);
           break;
@@ -238,5 +242,15 @@ export default class DropboxSync {
       this.store.dispatch(setCurrentNoteId(newNote.id));
     }
     this.store.dispatch(setNoteSyncStatus(newNote.id, NoteStatus.OK));
+  }
+
+  async deleteNote(action) {
+    try {
+      await this.dropbox.filesDeleteV2({
+        path: `/${action.note.name}.md`
+      });
+    } catch (err) {
+      console.log(err);
+    }
   }
 }

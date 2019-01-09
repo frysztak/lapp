@@ -6,10 +6,10 @@ import { connect } from "react-redux";
 import {
   updateNote,
   toggleNoteDeletionModal,
-  deleteCurrentNote,
   setNewestNoteAsCurrent,
   toggleSidebar,
-  renameNote
+  renameNote,
+  deleteNote
 } from "../redux/actions";
 import Note from "../Note";
 
@@ -140,7 +140,7 @@ class NoteEditor extends React.Component {
 
             <button
               className="is-size-5 button is-primary"
-              onClick={this.props.deleteNote}
+              onClick={() => this.props.deleteNote(this.props.currentNote)}
             >
               Yes
             </button>
@@ -167,9 +167,9 @@ const mapDispatchToProps = dispatch => {
     onNoteRenamed: (oldNote, updatedNote) =>
       dispatch(renameNote(oldNote, updatedNote)),
     toggleNoteDeletionModal: () => dispatch(toggleNoteDeletionModal()),
-    deleteNote: () => {
+    deleteNote: note => {
       dispatch(toggleNoteDeletionModal());
-      dispatch(deleteCurrentNote());
+      dispatch(deleteNote(note));
       dispatch(setNewestNoteAsCurrent());
     },
     toggleSidebar: () => dispatch(toggleSidebar())

@@ -6,7 +6,7 @@ import {
 
 const initialState = {
   synchronizationEnabled: false,
-  dbxAccessToken: null,
+  dbxAccessToken: undefined,
   notesStatus: {} //id: NoteStatus
 };
 

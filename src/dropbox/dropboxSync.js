@@ -54,7 +54,11 @@ export default class DropboxSync {
       const currentToken = this.dropbox.getAccessToken();
       if (currentToken) return;
 
-      const accessToken = store.getState().dropbox.dbxAccessToken;
+      let accessToken = store.getState().dropbox.dbxAccessToken;
+      if (!accessToken) {
+        accessToken = Cookies.get(Env.DropboxAccessTokenCookieName);
+      }
+
       if (accessToken !== currentToken) {
         this._setup(accessToken);
       }
@@ -62,8 +66,9 @@ export default class DropboxSync {
   }
 
   _setup(accessToken) {
-    this.store.dispatch(setDropboxSyncEnabled(true));
     this.dropbox.setAccessToken(accessToken);
+    this.store.dispatch(setDropboxSyncEnabled(true));
+    this.hardSync();
   }
 
   async hardSync() {
@@ -86,6 +91,8 @@ export default class DropboxSync {
   }
 
   enqueueAction(reduxAction) {
+    if (!this.dropbox.getAccessToken()) return;
+
     clearTimeout(this.timeoutID);
     this.actionQueue.push(reduxAction);
     this.timeoutID = setTimeout(

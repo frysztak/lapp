@@ -19,7 +19,6 @@ const store = createStore(
 
 export const dropbox = new DropboxSync();
 dropbox.attach(store);
-dropbox.hardSync();
 
 store.subscribe(
   throttle(() => {

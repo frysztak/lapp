@@ -3,17 +3,31 @@ import { connect } from "react-redux";
 import { setCurrentNoteId } from "../redux/actions";
 import { NoteStatus } from "../constants";
 
+const NoteListEntry = ({ note, status }) => {
+  const showStatus = status && status !== NoteStatus.DETACHED;
+  const statusMapping = {
+    [NoteStatus.IN_PROGRESS]: "has-text-info",
+    [NoteStatus.OK]: "has-text-success",
+    [NoteStatus.ERROR]: "has-text-danger"
+  };
+
+  return showStatus ? (
+    <div>
+      <span className={`icon move-left is-medium ${statusMapping[status]}`}>
+        <i className="fas fa-sm fa-check-circle" />
+      </span>
+      <span>{note.name}</span>
+    </div>
+  ) : (
+    <span>{note.name}</span>
+  );
+};
+
 class NoteList extends Component {
   constructor(props) {
     super(props);
 
     this.fileClicked = this.fileClicked.bind(this);
-    this.statusMapping = {
-      [NoteStatus.OK]: "",
-      [NoteStatus.IN_PROGRESS]: "has-text-info",
-      [NoteStatus.OK]: "has-text-success",
-      [NoteStatus.ERROR]: "has-text-danger"
-    };
   }
 
   fileClicked(e) {
@@ -24,7 +38,6 @@ class NoteList extends Component {
   render() {
     const files = this.props.notes.map(note => {
       const status = this.props.notesStatus[note.id];
-
       const isActive = this.props.currentNote
         ? this.props.currentNote.id === note.id
         : false;
@@ -37,12 +50,7 @@ class NoteList extends Component {
           data-id={note.id}
           onClick={this.fileClicked}
         >
-          <span
-            className={`icon move-left is-medium ${this.statusMapping[status]}`}
-          >
-            <i className="fas fa-sm fa-check-circle" />
-          </span>
-          {note.name}
+          <NoteListEntry note={note} status={status} />
         </li>
       );
     });

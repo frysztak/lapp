@@ -20,10 +20,17 @@ import {
 import { dropbox } from "./store";
 import { SOURCE_USER } from "../constants";
 
-export const addNewNote = note => ({
-  type: ADD_NEW_NOTE,
-  payload: { note: note }
-});
+export const addNewNote = (note, source = SOURCE_USER) => {
+  const action = {
+    type: ADD_NEW_NOTE,
+    payload: { note: note }
+  };
+
+  if (source === SOURCE_USER) {
+    dropbox.enqueueAction(action);
+  }
+  return action;
+};
 
 export const updateNote = (oldNote, updatedNote, source = SOURCE_USER) => {
   const action = {

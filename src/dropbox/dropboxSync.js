@@ -195,7 +195,7 @@ export default class DropboxSync {
         }
       } else {
         note = buildNewNote(content);
-        this.store.dispatch(addNewNote(note));
+        this.store.dispatch(addNewNote(note, SOURCE_DROPBOX));
         if (!currentNoteId) {
           this.store.dispatch(setCurrentNoteId(note.id));
         }

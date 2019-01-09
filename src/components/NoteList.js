@@ -31,7 +31,7 @@ class NoteList extends Component {
   }
 
   fileClicked(e) {
-    const noteID = e.target.dataset.id;
+    const noteID = e.currentTarget.dataset.id;
     this.props.onNoteClicked(noteID);
   }
 
@@ -60,7 +60,7 @@ class NoteList extends Component {
 }
 
 const processNotes = (notes, filter, sortOrder) => {
-  let processedNotes = notes;
+  let processedNotes = notes.slice(0);
   if (filter) {
     processedNotes = notes.filter(a => a.name.startsWith(filter));
   }

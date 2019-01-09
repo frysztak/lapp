@@ -55,7 +55,9 @@ class NoteList extends Component {
       );
     });
 
-    return <ul className="menu-note-list">{files}</ul>;
+    let cln = "menu-note-list";
+    if (this.props.moveDown) cln += " move-down";
+    return <ul className={cln}>{files}</ul>;
   }
 }
 

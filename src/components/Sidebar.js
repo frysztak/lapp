@@ -142,7 +142,7 @@ const Sidebar = props => {
 
       <div className="menu-divider is-divider" />
 
-      <NoteList />
+      <NoteList moveDown={props.showFilterPopup} />
 
       {props.dropboxSyncEnabled ? null : (
         <div className="has-text-centered">

@@ -169,7 +169,7 @@ export default class DropboxSync {
       const quillDelta = new Delta(quillOps);
       const id = uuidv1();
       const name = action.filename.replace(".md", "");
-      const date = moment(action.client_modified).toISOString();
+      const date = moment(action.server_modified).toISOString();
       return new Note(id, name, quillDelta, date);
     };
 
@@ -226,7 +226,11 @@ export default class DropboxSync {
     }
 
     const oldNote = { id: noteId, name: action.oldName.replace(".md", "") };
-    const newNote = { id: uuidv1(), name: action.newName.replace(".md", "") };
+    const newNote = {
+      id: uuidv1(),
+      name: action.newName.replace(".md", ""),
+      lastEdit: action.lastEdit
+    };
     this.store.dispatch(renameNote(oldNote, newNote, SOURCE_DROPBOX));
 
     const currentNoteId = this.store.getState().notes.currentNoteId;

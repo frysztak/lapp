@@ -41,7 +41,8 @@ const detectRenames = (setA, setB, setNoteId = false) => {
       ) {
         const action = {
           oldName: noteB.name,
-          newName: noteA.name
+          newName: noteA.name,
+          lastEdit: noteA.server_modified
         };
         const noteId = noteA.noteId ? noteA.noteId : noteB.noteId;
         if (noteId && setNoteId) action.noteId = noteId;
@@ -122,7 +123,8 @@ export const convertDiffToActions = diff => {
     type: LOCAL_RENAME,
     noteId: file.noteId,
     oldName: file.oldName,
-    newName: file.newName
+    newName: file.newName,
+    lastEdit: file.lastEdit
   }));
 
   return [...downloads, ...uploads, ...remoteRenames, ...localRenames];

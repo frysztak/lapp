@@ -37,8 +37,10 @@ class NoteList extends Component {
           data-id={note.id}
           onClick={this.fileClicked}
         >
-          <span className={`icon is-medium ${this.statusMapping[status]}`}>
-            <i className="fas fa-check-circle" />
+          <span
+            className={`icon move-left is-medium ${this.statusMapping[status]}`}
+          >
+            <i className="fas fa-sm fa-check-circle" />
           </span>
           {note.name}
         </li>

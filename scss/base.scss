@@ -11,6 +11,8 @@ $light-text-color: #333333;
 $light-text-secondary-color: #e0e0e0;
 $lighter-text-color: #888995;
 $red: #aa4465;
+$green: #4caf50;
+$info: #0288d1;
 
 $body-background-color: $light-background-color;
 $divider-background-color: $lighter-text-color;
@@ -33,4 +35,12 @@ $divider-background-color: $lighter-text-color;
 
 .dropdown-content.equal-padding {
   padding: 0.5rem;
+}
+
+.fa-sm {
+  font-size: 0.75em;
+}
+
+.move-left {
+  margin-left: -5px;
 }

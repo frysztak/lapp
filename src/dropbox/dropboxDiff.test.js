@@ -140,7 +140,8 @@ it("Rename local file instead of downloading", () => {
     {
       noteId: "idC",
       oldName: "C",
-      newName: "A"
+      newName: "A",
+      lastEdit: remoteFiles[0].server_modified
     }
   ]);
   expect(toRenameRemote).toEqual([]);
@@ -183,7 +184,8 @@ it("Rename remote file instead of uploading", () => {
   expect(toRenameRemote).toEqual([
     {
       oldName: "A",
-      newName: "C"
+      newName: "C",
+      lastEdit: localFiles[0].server_modified
     }
   ]);
 });
@@ -225,7 +227,8 @@ it("Rename local file, but remote file has been renamed through Dropbox Web UI",
     {
       noteId: "idC",
       oldName: "C",
-      newName: "A"
+      newName: "A",
+      lastEdit: remoteFiles[0].server_modified
     }
   ]);
   expect(toRenameRemote).toEqual([]);

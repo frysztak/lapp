@@ -1,4 +1,4 @@
-import { fromDelta } from "quill-delta-markdown";
+import { deltaToMarkdown } from "quill-delta-to-markdown";
 import DropboxContentHasher from "./dropboxContentHasher";
 import moment from "moment";
 import {
@@ -12,7 +12,7 @@ const convertDateTimeToDropboxFormat = datetime =>
   moment.utc(datetime, moment.ISO_8601).format("YYYY-MM-DDTHH:mm:ss") + "Z";
 
 export const convertNoteToFile = note => {
-  const markdown = fromDelta(note.text.ops);
+  const markdown = deltaToMarkdown(note.text.ops);
   const hasher = new DropboxContentHasher();
   hasher.update(markdown);
   const date = convertDateTimeToDropboxFormat(note.lastEdit);

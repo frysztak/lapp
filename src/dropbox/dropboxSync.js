@@ -25,7 +25,7 @@ import {
 } from "./dropboxDiff";
 import { blob2string } from "../redux/utils";
 import Note from "../Note";
-import { toDelta } from "quill-delta-markdown";
+import markdownToDelta from "markdown-to-quill-delta";
 import uuidv1 from "uuid/v1";
 import * as Delta from "quill-delta";
 import moment from "moment";
@@ -169,7 +169,7 @@ export default class DropboxSync {
 
   async downloadNote(action) {
     const buildNewNote = content => {
-      const quillOps = toDelta(content);
+      const quillOps = markdownToDelta(content);
       const quillDelta = new Delta(quillOps);
       const id = uuidv1();
       const name = action.filename.replace(".md", "");

@@ -10,6 +10,7 @@
     "dropbox": "^4.0.14",
     "js-cookie": "^2.2.0",
     "lodash": "^4.17.11",
+    "markdown-to-quill-delta": "^0.5.4",
     "moment": "^2.23.0",
     "node-sass-chokidar": "^1.3.4",
     "quill-delta-markdown": "git+https://github.com/rdesmartin/quill-delta-markdown.git",

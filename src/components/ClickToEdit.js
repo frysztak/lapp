@@ -66,15 +66,15 @@ class ClickToEdit extends React.Component {
           "size",
           "bold",
           "italic",
-          "underline",
+          //"underline",
           "strike",
-          "blockquote",
+          //"blockquote",
           "list",
           "bullet",
-          "indent",
+          //"indent",
           "link",
           "image",
-          "video"
+          //"video"
         ];
   }
 

@@ -102,6 +102,15 @@ export default class DropboxSync {
     );
   }
 
+  disableSynchronization() {
+    this.dropbox.setAccessToken(null);
+    Cookies.remove(Env.DropboxAccessTokenCookieName);
+
+    this.store.getState().notes.all.forEach(note => {
+      this.store.dispatch(setNoteSyncStatus(note.id, NoteStatus.DETACHED));
+    });
+  }
+
   async getRemoteFiles() {
     try {
       const response = await this.dropbox.filesListFolder({ path: "" });

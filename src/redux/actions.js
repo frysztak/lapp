@@ -114,10 +114,17 @@ export const hideAllPopups = () => ({
   type: HIDE_ALL_POPUPS
 });
 
-export const setDropboxSyncEnabled = enabled => ({
-  type: SET_DROPBOX_SYNC_ENABLED,
-  payload: { enabled: enabled }
-});
+export const setDropboxSyncEnabled = enabled => {
+  const action = {
+    type: SET_DROPBOX_SYNC_ENABLED,
+    payload: { enabled: enabled }
+  };
+
+  if (enabled === false) {
+    dropbox.disableSynchronization();
+  }
+  return action;
+};
 
 export const setDropboxAccessToken = token => ({
   type: SET_DROPBOX_ACCESS_TOKEN,

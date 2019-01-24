@@ -12,7 +12,8 @@ import {
   setFilterValue,
   toggleSortPopup,
   setSortValue,
-  toggleMenu
+  toggleMenu,
+  setDropboxSyncEnabled
 } from "../redux/actions";
 
 const Popup = ({ showPopup, child, menu, centerPopup, equalPadding }) => {
@@ -221,10 +222,11 @@ const mapDispatchToProps = dispatch => {
       dispatch(toggleSortPopup());
     },
     onSortOrderClicked: sortOrder => dispatch(setSortValue(sortOrder)),
-    toggleMenu: (ev) => {
+    toggleMenu: ev => {
       ev.stopPropagation();
-      dispatch(toggleMenu())
-    }
+      dispatch(toggleMenu());
+    },
+    disconnectFromDropbox: () => dispatch(setDropboxSyncEnabled(false))
   };
 };
 

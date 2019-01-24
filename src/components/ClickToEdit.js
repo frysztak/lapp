@@ -6,19 +6,32 @@ import * as Delta from "quill-delta";
 
 const CustomToolbar = () => (
   <div id="toolbar">
-    <button className="ql-bold" />
-    <button className="ql-italic" />
-    <button className="ql-blockquote" />
-    <button className="ql-list" value="ordered" />
-    <button className="ql-list" value="bullet" />
-    <button className="ql-list" value="check" />
-    <button className="ql-deleteNote">
-      <i
-        style={{ paddingLeft: 5 }}
-        className="fas fa-trash has-text-danger"
-        id="deleteIcon"
-      />
-    </button>
+    <span className="ql-formats">
+      <select className="ql-size">
+        <option selected />
+        <option value="large" />
+        <option value="huge" />
+      </select>
+    </span>
+
+    <span className="ql-formats">
+      <button className="ql-bold" />
+      <button className="ql-italic" />
+      <button className="ql-strike" />
+      <button className="ql-list" value="ordered" />
+      <button className="ql-list" value="bullet" />
+      <button className="ql-list" value="check" />
+    </span>
+
+    <span className="ql-formats">
+      <button className="ql-deleteNote">
+        <i
+          style={{ paddingLeft: 5 }}
+          className="fas fa-trash has-text-danger"
+          id="deleteIcon"
+        />
+      </button>
+    </span>
   </div>
 );
 

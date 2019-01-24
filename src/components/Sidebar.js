@@ -221,7 +221,10 @@ const mapDispatchToProps = dispatch => {
       dispatch(toggleSortPopup());
     },
     onSortOrderClicked: sortOrder => dispatch(setSortValue(sortOrder)),
-    toggleMenu: () => dispatch(toggleMenu())
+    toggleMenu: (ev) => {
+      ev.stopPropagation();
+      dispatch(toggleMenu())
+    }
   };
 };
 

@@ -15,7 +15,8 @@ import {
   SET_NOTE_SYNC_STATUS,
   SET_DROPBOX_SYNC_ENABLED,
   SET_DROPBOX_ACCESS_TOKEN,
-  RENAME_NOTE
+  RENAME_NOTE,
+  HIDE_ALL_POPUPS
 } from "./actionTypes";
 import { dropbox } from "./store";
 import { SOURCE_USER } from "../constants";
@@ -107,6 +108,10 @@ export const setSortValue = value => ({
 
 export const toggleMenu = () => ({
   type: TOGGLE_MENU
+});
+
+export const hideAllPopups = () => ({
+  type: HIDE_ALL_POPUPS
 });
 
 export const setDropboxSyncEnabled = enabled => ({

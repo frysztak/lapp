@@ -8,11 +8,7 @@ import { env as Env } from "./Env";
 import Sidebar from "./components/Sidebar";
 
 import { connect } from "react-redux";
-import {
-  hideFilterPopup,
-  hideSortPopup,
-  setDropboxSyncEnabled
-} from "./redux/actions";
+import { setDropboxSyncEnabled, hideAllPopups } from "./redux/actions";
 
 ReactModal.setAppElement("#root");
 
@@ -56,12 +52,6 @@ class App extends Component {
     await this.checkForDropboxAuthCode();
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.showSidebar !== this.props.showSidebar) {
-      this.slideout.toggle();
-    }
-  }
-
   render() {
     return (
       <div onClick={this.props.hidePopups}>
@@ -80,23 +70,17 @@ class App extends Component {
 }
 
 const mapStateToProps = state => {
-  return {
-    showSidebar: state.editor.showSidebar
-  };
+  return {};
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    hidePopups: () => {
-      dispatch(hideFilterPopup());
-      dispatch(hideSortPopup());
-    },
+    hidePopups: () => dispatch(hideAllPopups()),
     setDropboxSyncEnabled: enabled => dispatch(setDropboxSyncEnabled(enabled))
   };
 };
 
 App.propTypes = {
-  showSidebar: PropTypes.bool.isRequired,
   hidePopups: PropTypes.func.isRequired
 };
 

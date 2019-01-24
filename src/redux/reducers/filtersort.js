@@ -5,7 +5,8 @@ import {
   TOGGLE_SORT_POPUP,
   HIDE_SORT_POPUP,
   SET_SORT_VALUE,
-  TOGGLE_MENU
+  TOGGLE_MENU,
+  HIDE_ALL_POPUPS
 } from "../actionTypes";
 import { SortTypes } from "./../../constants";
 
@@ -41,6 +42,14 @@ export default function(state = initialState, action) {
     }
     case TOGGLE_MENU: {
       return { ...state, showMenu: !state.showMenu };
+    }
+    case HIDE_ALL_POPUPS: {
+      return {
+        ...state,
+        showFilterPopup: false,
+        showSortPopup: false,
+        showMenu: false
+      };
     }
     default:
       return state;

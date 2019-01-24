@@ -21,7 +21,15 @@ const initialState = {
 export default function(state = initialState, action) {
   switch (action.type) {
     case TOGGLE_FILTER_POPUP: {
-      return { ...state, showFilterPopup: !state.showFilterPopup };
+      const next = !state.showFilterPopup;
+      return next === true
+        ? {
+            ...state,
+            showFilterPopup: true,
+            showSortPopup: false,
+            showMenu: false
+          }
+        : { ...state, showFilterPopup: next };
     }
     case HIDE_FILTER_POPUP: {
       return { ...state, showFilterPopup: false };
@@ -31,7 +39,15 @@ export default function(state = initialState, action) {
       return { ...state, filter: filterValue };
     }
     case TOGGLE_SORT_POPUP: {
-      return { ...state, showSortPopup: !state.showSortPopup };
+      const next = !state.showSortPopup;
+      return next === true
+        ? {
+            ...state,
+            showSortPopup: true,
+            showFilterPopup: false,
+            showMenu: false
+          }
+        : { ...state, showSortPopup: next };
     }
     case HIDE_SORT_POPUP: {
       return { ...state, showSortPopup: false };
@@ -41,7 +57,15 @@ export default function(state = initialState, action) {
       return { ...state, sortOrder: sortValue };
     }
     case TOGGLE_MENU: {
-      return { ...state, showMenu: !state.showMenu };
+      const next = !state.showMenu;
+      return next === true
+        ? {
+            ...state,
+            showMenu: true,
+            showFilterPopup: false,
+            showSortPopup: false
+          }
+        : { ...state, showMenu: next };
     }
     case HIDE_ALL_POPUPS: {
       return {

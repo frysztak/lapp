@@ -7,7 +7,6 @@ import {
   updateNote,
   toggleNoteDeletionModal,
   setNewestNoteAsCurrent,
-  toggleSidebar,
   renameNote,
   deleteNote
 } from "../redux/actions";
@@ -58,13 +57,6 @@ class NoteEditor extends React.Component {
     return (
       <div>
         <div className="columns is-mobile is-gapless is-marginless is-centered is-vcentered">
-          <div className="column is-narrow is-size-4 slideout-trigger is-hidden-desktop">
-            <i
-              onClick={this.props.toggleSidebar}
-              className="fas fa-ellipsis-v has-hover-shadow clickable"
-            />
-          </div>
-
           <div className="column">
             <ClickToEdit
               ref={this.nameEditorRef}
@@ -171,8 +163,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(toggleNoteDeletionModal());
       dispatch(deleteNote(note));
       dispatch(setNewestNoteAsCurrent());
-    },
-    toggleSidebar: () => dispatch(toggleSidebar())
+    }
   };
 };
 
@@ -181,8 +172,7 @@ NoteEditor.propTypes = {
   onNoteChanged: PropTypes.func.isRequired,
   showDeletionModal: PropTypes.bool.isRequired,
   toggleNoteDeletionModal: PropTypes.func.isRequired,
-  deleteNote: PropTypes.func.isRequired,
-  toggleSidebar: PropTypes.func.isRequired
+  deleteNote: PropTypes.func.isRequired
 };
 
 export default connect(

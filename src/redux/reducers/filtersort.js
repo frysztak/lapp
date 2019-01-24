@@ -4,7 +4,8 @@ import {
   HIDE_FILTER_POPUP,
   TOGGLE_SORT_POPUP,
   HIDE_SORT_POPUP,
-  SET_SORT_VALUE
+  SET_SORT_VALUE,
+  TOGGLE_MENU
 } from "../actionTypes";
 import { SortTypes } from "./../../constants";
 
@@ -12,7 +13,8 @@ const initialState = {
   showFilterPopup: false,
   filter: "",
   showSortPopup: false,
-  sortOrder: SortTypes[0]
+  sortOrder: SortTypes[0],
+  showMenu: false
 };
 
 export default function(state = initialState, action) {
@@ -36,6 +38,9 @@ export default function(state = initialState, action) {
     case SET_SORT_VALUE: {
       const { sortValue } = action.payload;
       return { ...state, sortOrder: sortValue };
+    }
+    case TOGGLE_MENU: {
+      return { ...state, showMenu: !state.showMenu };
     }
     default:
       return state;

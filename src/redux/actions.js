@@ -11,7 +11,7 @@ import {
   SET_SORT_VALUE,
   HIDE_SORT_POPUP,
   TOGGLE_SORT_POPUP,
-  TOGGLE_SIDEBAR,
+  TOGGLE_MENU,
   SET_NOTE_SYNC_STATUS,
   SET_DROPBOX_SYNC_ENABLED,
   SET_DROPBOX_ACCESS_TOKEN,
@@ -105,8 +105,8 @@ export const setSortValue = value => ({
   payload: { sortValue: value }
 });
 
-export const toggleSidebar = () => ({
-  type: TOGGLE_SIDEBAR
+export const toggleMenu = () => ({
+  type: TOGGLE_MENU
 });
 
 export const setDropboxSyncEnabled = enabled => ({

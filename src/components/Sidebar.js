@@ -11,7 +11,8 @@ import {
   toggleFilterPopup,
   setFilterValue,
   toggleSortPopup,
-  setSortValue
+  setSortValue,
+  toggleMenu
 } from "../redux/actions";
 
 const Popup = ({ showPopup, child, menu, centerPopup, equalPadding }) => {
@@ -77,7 +78,37 @@ const SortListItem = props => {
 const Sidebar = props => {
   return (
     <div>
+      <div className="slideout-trigger is-size-4 sidebar-ellipsis">
+        <Popup
+          showPopup={props.showMenu}
+          child={
+            <i
+              className="fas fa-ellipsis-v has-hover-shadow clickable"
+              onClick={props.toggleMenu}
+            />
+          }
+          menu={
+            <div>
+              {props.dropboxSyncEnabled ? (
+                <button
+                  className="button is-white dropdown-item is-size-6"
+                  onClick={props.disconnectFromDropbox}
+                >
+                  Disconnect from Dropbox
+                </button>
+              ) : null}
+              <a
+                href="https://github.com/frysztak/lapp"
+                className="button is-white dropdown-item is-size-6"
+              >
+                GitHub
+              </a>
+            </div>
+          }
+        />
+      </div>
       <div className="menu-header has-text-centered is-size-2">Lapp</div>
+
       <div className="menu-divider is-divider" />
 
       <div className="columns is-mobile is-size-3">
@@ -168,7 +199,8 @@ const mapStateToProps = state => {
     filter: state.filtersort.filter,
     showSortPopup: state.filtersort.showSortPopup,
     sortOrder: state.filtersort.sortOrder,
-    dropboxSyncEnabled: state.dropbox.synchronizationEnabled
+    dropboxSyncEnabled: state.dropbox.synchronizationEnabled,
+    showMenu: state.filtersort.showMenu
   };
 };
 
@@ -188,7 +220,8 @@ const mapDispatchToProps = dispatch => {
       ev.stopPropagation();
       dispatch(toggleSortPopup());
     },
-    onSortOrderClicked: sortOrder => dispatch(setSortValue(sortOrder))
+    onSortOrderClicked: sortOrder => dispatch(setSortValue(sortOrder)),
+    toggleMenu: () => dispatch(toggleMenu())
   };
 };
 

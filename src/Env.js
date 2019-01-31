@@ -12,13 +12,13 @@ class Env {
 
     this.DropboxClientID = "fub6552as6wm1wa";
     this.DropboxRedirectPath = "finish_dbx_auth";
-    this.DropboxRedirectUrl = `http://localhost:3000/${
+    this.DropboxRedirectUrl = `https://frysztak.net/apps/lapp/${
       this.DropboxRedirectPath
     }`;
     this.DropboxAuthorizeUrl = `https://www.dropbox.com/oauth2/authorize?client_id=${
       this.DropboxClientID
     }&response_type=code&redirect_uri=${this.DropboxRedirectUrl}`;
-    this.DropboxAccessTokenUrl = `http://localhost:3333/accessToken?authorizationCode=`;
+    this.DropboxAccessTokenUrl = `https://frysztak.net/apps/lapp/backend/accessToken?authorizationCode=`;
     this.DropboxAccessTokenCookieName = "dbxAccessToken";
   }
 }

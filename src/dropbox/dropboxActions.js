@@ -1,3 +1,4 @@
+export const DBX_HARDSYNC = "DBX_HARDSYNC";
 export const DBX_RENAME = "DBX_RENAME";
 export const LOCAL_RENAME = "LOCAL_RENAME";
 export const DBX_DOWNLOAD = "DBX_DOWNLOAD";

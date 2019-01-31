@@ -16,7 +16,8 @@ import {
   DBX_UPLOAD,
   DBX_DOWNLOAD,
   LOCAL_RENAME,
-  DBX_DELETE
+  DBX_DELETE,
+  DBX_HARDSYNC
 } from "./dropboxActions";
 import {
   convertNoteToFile,
@@ -45,7 +46,9 @@ export default class DropboxSync {
   attach(store) {
     this.store = store;
 
-    const accessToken = Cookies.get(process.env.REACT_APP_DROPBOX_ACCESS_TOKEN_COOKIE_NAME);
+    const accessToken = Cookies.get(
+      process.env.REACT_APP_DROPBOX_ACCESS_TOKEN_COOKIE_NAME
+    );
     if (accessToken) {
       this._setup(accessToken);
       return;
@@ -57,7 +60,9 @@ export default class DropboxSync {
 
       let accessToken = store.getState().dropbox.dbxAccessToken;
       if (!accessToken) {
-        accessToken = Cookies.get(process.env.REACT_APP_DROPBOX_ACCESS_TOKEN_COOKIE_NAME);
+        accessToken = Cookies.get(
+          process.env.REACT_APP_DROPBOX_ACCESS_TOKEN_COOKIE_NAME
+        );
       }
 
       if (accessToken !== currentToken) {
@@ -66,16 +71,22 @@ export default class DropboxSync {
     });
   }
 
-  _setup(accessToken) {
+  async _setup(accessToken) {
     this.dropbox.setAccessToken(accessToken);
+
+    const userInfo = await this.dropbox.usersGetCurrentAccount();
+    this.accountID = userInfo.account_id;
+
     this.store.dispatch(setDropboxSyncEnabled(true));
     this.hardSync();
 
     if (!!window.EventSource) {
       const source = new EventSource(Env.DropboxNotifications);
-      source.onmessage = e => {
-        console.log(e);
-      };
+      source.addEventListener("folderChanged", event => {
+        if (event.data.accountID === this.accountID) {
+          this.enqueueAction({ type: DBX_HARDSYNC });
+        }
+      });
     }
   }
 
@@ -158,6 +169,9 @@ export default class DropboxSync {
           break;
         case LOCAL_RENAME:
           this.renameLocalNote(action);
+          break;
+        case DBX_HARDSYNC:
+          await this.hardSync();
           break;
         default:
           break;

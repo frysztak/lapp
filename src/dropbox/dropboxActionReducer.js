@@ -4,7 +4,12 @@ import {
   DELETE_NOTE,
   ADD_NEW_NOTE
 } from "../redux/actionTypes";
-import { DBX_RENAME, DBX_UPLOAD, DBX_DELETE } from "./dropboxActions";
+import {
+  DBX_RENAME,
+  DBX_UPLOAD,
+  DBX_DELETE,
+  DBX_HARDSYNC
+} from "./dropboxActions";
 
 const sameContent = (actionA, actionB) =>
   actionA.payload.updatedNote.text === actionB.payload.oldNote.text;
@@ -59,6 +64,8 @@ export const convertToDropboxAction = reduxAction => {
       type: DBX_DELETE,
       note: note
     };
+  } else if (reduxAction.type === DBX_HARDSYNC) {
+    return reduxAction;
   }
 };
 

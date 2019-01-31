@@ -10,16 +10,21 @@ class Env {
           }
         : {};
 
-    this.DropboxClientID = "fub6552as6wm1wa";
-    this.DropboxRedirectPath = "finish_dbx_auth";
-    this.DropboxRedirectUrl = `https://frysztak.net/apps/lapp/${
-      this.DropboxRedirectPath
+    this.DropboxRedirectUrl = `${process.env.PUBLIC_URL}/${
+      process.env.REACT_APP_DROPBOX_REDIRECT_PATH
     }`;
+
     this.DropboxAuthorizeUrl = `https://www.dropbox.com/oauth2/authorize?client_id=${
-      this.DropboxClientID
+      process.env.REACT_APP_DROPBOX_CLIENT_ID
     }&response_type=code&redirect_uri=${this.DropboxRedirectUrl}`;
-    this.DropboxAccessTokenUrl = `https://frysztak.net/apps/lapp/backend/accessToken?authorizationCode=`;
-    this.DropboxAccessTokenCookieName = "dbxAccessToken";
+
+    this.DropboxAccessTokenUrl = `${
+      process.env.REACT_APP_BACKEND_URL
+    }/accessToken?authorizationCode=`;
+
+    this.DropboxNotifications = `${
+      process.env.REACT_APP_BACKEND_URL
+    }/notifications`;
   }
 }
 

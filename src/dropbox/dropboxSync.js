@@ -45,7 +45,7 @@ export default class DropboxSync {
   attach(store) {
     this.store = store;
 
-    const accessToken = Cookies.get(Env.DropboxAccessTokenCookieName);
+    const accessToken = Cookies.get(process.env.REACT_APP_DROPBOX_ACCESS_TOKEN_COOKIE_NAME);
     if (accessToken) {
       this._setup(accessToken);
       return;
@@ -57,7 +57,7 @@ export default class DropboxSync {
 
       let accessToken = store.getState().dropbox.dbxAccessToken;
       if (!accessToken) {
-        accessToken = Cookies.get(Env.DropboxAccessTokenCookieName);
+        accessToken = Cookies.get(process.env.REACT_APP_DROPBOX_ACCESS_TOKEN_COOKIE_NAME);
       }
 
       if (accessToken !== currentToken) {
@@ -72,9 +72,7 @@ export default class DropboxSync {
     this.hardSync();
 
     if (!!window.EventSource) {
-      const source = new EventSource(
-        "https://frysztak.net/apps/lapp/backend/notifications"
-      );
+      const source = new EventSource(Env.DropboxNotifications);
       source.onmessage = e => {
         console.log(e);
       };
@@ -113,7 +111,7 @@ export default class DropboxSync {
 
   disableSynchronization() {
     this.dropbox.setAccessToken(null);
-    Cookies.remove(Env.DropboxAccessTokenCookieName);
+    Cookies.remove(process.env.REACT_APP_DROPBOX_ACCESS_TOKEN_COOKIE_NAME);
 
     this.store.getState().notes.all.forEach(note => {
       this.store.dispatch(setNoteSyncStatus(note.id, NoteStatus.DETACHED));

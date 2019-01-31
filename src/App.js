@@ -15,13 +15,13 @@ ReactModal.setAppElement("#root");
 class App extends Component {
   async checkForDropboxAuthCode() {
     const currentURL = new URL(window.location.href);
-    if (currentURL.pathname === `/${Env.DropboxRedirectPath}`) {
+    if (currentURL.pathname.endsWith(process.env.REACT_APP_DROPBOX_REDIRECT_PATH)) {
       if (currentURL.searchParams.has("code")) {
         const authorizationCode = currentURL.searchParams.get("code");
 
         // hide authorization code in url
         if (window.history.pushState) {
-          window.history.pushState({}, null, window.location.origin);
+          window.history.pushState({}, null, process.env.PUBLIC_URL);
         }
 
         const accessTokenUrl = `${

@@ -70,6 +70,15 @@ export default class DropboxSync {
     this.dropbox.setAccessToken(accessToken);
     this.store.dispatch(setDropboxSyncEnabled(true));
     this.hardSync();
+
+    if (!!window.EventSource) {
+      const source = new EventSource(
+        "https://frysztak.net/apps/lapp/backend/notifications"
+      );
+      source.onmessage = e => {
+        console.log(e);
+      };
+    }
   }
 
   async hardSync() {

@@ -83,7 +83,8 @@ export default class DropboxSync {
     if (!!window.EventSource) {
       const source = new EventSource(Env.DropboxNotifications);
       source.addEventListener("folderChanged", event => {
-        if (event.data.accountID === this.accountID) {
+        const msg = JSON.parse(event.data);
+        if (msg.accountID === this.accountID) {
           this.enqueueAction({ type: DBX_HARDSYNC });
         }
       });
@@ -207,6 +208,9 @@ export default class DropboxSync {
       return new Note(id, name, quillDelta, date);
     };
 
+    this.store.dispatch(
+      setNoteSyncStatus(action.noteId, NoteStatus.IN_PROGRESS)
+    );
     try {
       const response = await this.dropbox.filesDownload({
         path: `/${action.filename}`

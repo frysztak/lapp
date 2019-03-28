@@ -3,6 +3,7 @@
     {
       "name": "lapp",
       "script": "npx",
+      "log_date_format": "YYYY-MM-DD HH:mm Z",
       "interpreter": "none",
       "args": "serve -s build -p 3333"
     }

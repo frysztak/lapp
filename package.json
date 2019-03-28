@@ -2,6 +2,7 @@
   "name": "lapp",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://frysztak.net/lapp",
   "dependencies": {
     "bulma": "^0.7.2",
     "bulma-checkradio": "^2.1.0",
